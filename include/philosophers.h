@@ -6,13 +6,11 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 10:29:03 by cdeville          #+#    #+#             */
-/*   Updated: 2024/04/16 10:29:51 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/04/16 10:45:47 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILOSOPHERS_H
 # define PHILOSOPHERS_H
-
-# include <libft.h>
 
 #endif
