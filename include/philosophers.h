@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 10:29:03 by cdeville          #+#    #+#             */
-/*   Updated: 2024/04/17 14:44:04 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/04/17 17:42:34 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include <pthread.h>
 # include <unistd.h>
-
+# include <sys/time.h>
 # include <stdlib.h>
 # include <stdio.h>
 
@@ -40,6 +40,7 @@ typedef struct s_philo_param{
 	t_philo			*philo_tab;
 	pthread_mutex_t	*forks;
 	pthread_t		*threads;
+	t_bool			is_dead;
 }	t_philo_param;
 
 // UTILS
