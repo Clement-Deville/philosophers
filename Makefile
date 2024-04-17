@@ -9,6 +9,9 @@ FLAGS = -Wall -Wextra -Werror
 DEBUG = -g
 
 SRCS_FILES =	main	\
+				init	\
+				thread	\
+				utils	\
 
 SRCS_FILES_BONUS =	main_bonus	\
 
