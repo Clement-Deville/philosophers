@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 14:50:23 by cdeville          #+#    #+#             */
-/*   Updated: 2024/04/16 17:07:51 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/04/18 20:10:11 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,4 +83,16 @@ int	ft_atoi(const char *nptr)
 		i++;
 	}
 	return (nb * sign);
+}
+
+long	get_time(void)
+{
+	struct timeval	time;
+	long			ms;
+
+	gettimeofday(&time, NULL);
+	ms = time.tv_sec * 1000;
+	if (time.tv_usec)
+		ms += time.tv_usec / 1000;
+	return (ms);
 }

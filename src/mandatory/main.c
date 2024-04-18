@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 10:28:30 by cdeville          #+#    #+#             */
-/*   Updated: 2024/04/17 17:42:32 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/04/18 19:34:12 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,11 @@ int	destroy_mutex(t_philo_param *param)
 			return (-1);
 		}
 		i++;
+	}
+	if (pthread_mutex_destroy(&(param->mutex_is_dead)))
+	{
+		ft_putstr_fd("Error at mutex destory\n", 2);
+		return (-1);
 	}
 	return (0);
 }

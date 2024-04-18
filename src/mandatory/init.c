@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 13:43:18 by cdeville          #+#    #+#             */
-/*   Updated: 2024/04/17 14:31:32 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/04/18 20:09:07 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,11 @@ int	init_mutex(t_philo_param *param)
 		}
 		i++;
 	}
+	if (pthread_mutex_init(&(param->mutex_is_dead), NULL))
+	{
+		ft_putstr_fd("Error at mutex init\n", 2);
+		return (-1);
+	}
 	return (0);
 }
 
@@ -89,6 +94,8 @@ int	init(t_philo_param *param, int argc, char *argv[])
 	if (param->philo_tab == NULL)
 		return (free(param->threads),
 			free(param->forks), ft_putstr_fd("Erreur de malloc\n", 2), 1);
+	param->is_dead = FALSE;
+	gettimeofday(&(param->clock), NULL);
 	create_philo(param);
 	return (0);
 }

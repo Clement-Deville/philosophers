@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 10:29:03 by cdeville          #+#    #+#             */
-/*   Updated: 2024/04/17 17:42:34 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/04/18 20:08:21 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,9 @@ typedef struct s_philo_param{
 	t_philo			*philo_tab;
 	pthread_mutex_t	*forks;
 	pthread_t		*threads;
+	pthread_mutex_t	mutex_is_dead;
 	t_bool			is_dead;
+	struct timeval	clock;
 }	t_philo_param;
 
 // UTILS
@@ -48,6 +50,7 @@ typedef struct s_philo_param{
 void	ft_putstr_fd(char *s, int fd);
 void	ft_putnbr_fd(int n, int fd);
 int		ft_atoi(const char *nptr);
+long	get_time(void);
 
 // THREAD
 
