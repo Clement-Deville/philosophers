@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 13:41:40 by cdeville          #+#    #+#             */
-/*   Updated: 2024/04/18 20:11:51 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/04/19 10:16:20 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,8 @@ int	do_die(t_philo *philo)
 
 int	take_left(t_philo *philo, struct timeval start)
 {
-	pthread_mutex_lock(&(philo->l_fork));
+	if (pthread_mutex_lock(&(philo->l_fork)))
+		return (ft_putstr_fd("Mutex lock error\n", 2), 1);
 	if (time_passed(start) >= ((t_philo_param *)(philo->param))->time_to_die)
 		do_die(philo);
 	if (is_dead(philo) == FALSE)
@@ -60,7 +61,8 @@ int	take_left(t_philo *philo, struct timeval start)
 
 int	take_right(t_philo *philo, struct timeval start)
 {
-	pthread_mutex_lock(&(philo->r_fork));
+	if (pthread_mutex_lock(&(philo->r_fork)))
+		return (ft_putstr_fd("Mutex lock error\n", 2), 1);
 	if (time_passed(start) >= ((t_philo_param *)(philo->param))->time_to_die)
 		do_die(philo);
 	if (is_dead(philo) == FALSE)
@@ -72,8 +74,10 @@ int	do_eat(t_philo *philo)
 {
 	printf("%ld %ld is eating\n", time_passed(((t_philo_param *)(philo->param))->clock), philo->philo_number);
 	usleep(((t_philo_param *)(philo->param))->time_to_eat * 1000);
-	pthread_mutex_unlock(&(philo->l_fork));
-	pthread_mutex_unlock(&(philo->r_fork));
+	if (pthread_mutex_unlock(&(philo->l_fork)))
+		return (ft_putstr_fd("Mutex unlock error\n", 2), 1);
+	if (pthread_mutex_unlock(&(philo->r_fork)))
+		return (ft_putstr_fd("Mutex unlock error\n", 2), 1);
 	return (0);
 }
 

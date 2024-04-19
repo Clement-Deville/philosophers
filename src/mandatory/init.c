@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 13:43:18 by cdeville          #+#    #+#             */
-/*   Updated: 2024/04/18 20:09:07 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/04/19 10:11:09 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,5 +97,14 @@ int	init(t_philo_param *param, int argc, char *argv[])
 	param->is_dead = FALSE;
 	gettimeofday(&(param->clock), NULL);
 	create_philo(param);
+	int	i;
+
+	i = 0;
+	while(i < param->number_of_philosophers)
+	{
+		printf("Philo %d: \nL: %p\nR: %p\n", i + 1, &(param->philo_tab[i].l_fork), &(param->philo_tab[i].l_fork));
+		// printf("Fork %d: %p\n", i + 1, &(param->forks[i]));
+		i++;
+	}
 	return (0);
 }
