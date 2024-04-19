@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 13:41:40 by cdeville          #+#    #+#             */
-/*   Updated: 2024/04/19 10:16:20 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/04/19 18:10:49 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ long	time_passed(struct timeval start)
 	return (miliseconds);
 }
 
-
 t_bool	is_dead(t_philo *philo)
 {
 	t_bool	status;
@@ -35,77 +34,72 @@ t_bool	is_dead(t_philo *philo)
 	pthread_mutex_lock(&(((t_philo_param *)(philo->param))->mutex_is_dead));
 	if (((t_philo_param *)(philo->param))->is_dead == TRUE)
 		status = TRUE;
+	// usleep(10);
 	pthread_mutex_unlock(&(((t_philo_param *)(philo->param))->mutex_is_dead));
 	return (status);
 }
 
 int	do_die(t_philo *philo)
 {
-	if (is_dead(philo))
+	pthread_mutex_lock(&(((t_philo_param *)(philo->param))->mutex_is_dead));
+	if (((t_philo_param *)(philo->param))->is_dead == TRUE)
+	{
+		pthread_mutex_unlock(&(((t_philo_param *)(philo->param))->mutex_is_dead));
 		return (0);
-	printf("%ld %ld is dead\n", time_passed(((t_philo_param *)(philo->param))->clock), philo->philo_number);
+	}
 	((t_philo_param *)(philo->param))->is_dead = TRUE;
+	usleep(50);
+	do_print(DEAD, philo);
+	pthread_mutex_unlock(&(((t_philo_param *)(philo->param))->mutex_is_dead));
 	return (0);
 }
 
-int	take_left(t_philo *philo, struct timeval start)
+int	take_left(t_philo *philo)
 {
-	if (pthread_mutex_lock(&(philo->l_fork)))
+	if (pthread_mutex_lock(philo->l_fork))
 		return (ft_putstr_fd("Mutex lock error\n", 2), 1);
-	if (time_passed(start) >= ((t_philo_param *)(philo->param))->time_to_die)
-		do_die(philo);
 	if (is_dead(philo) == FALSE)
-		printf("%ld %ld has taken a fork\n", time_passed(((t_philo_param *)(philo->param))->clock), philo->philo_number);
+		do_print(FORK, philo);
 	return (0);
 }
 
-int	take_right(t_philo *philo, struct timeval start)
+int	take_right(t_philo *philo)
 {
-	if (pthread_mutex_lock(&(philo->r_fork)))
+	if (pthread_mutex_lock(philo->r_fork))
 		return (ft_putstr_fd("Mutex lock error\n", 2), 1);
-	if (time_passed(start) >= ((t_philo_param *)(philo->param))->time_to_die)
-		do_die(philo);
 	if (is_dead(philo) == FALSE)
-		printf("%ld %ld has taken a fork\n", time_passed(((t_philo_param *)(philo->param))->clock), philo->philo_number);
+		do_print(FORK, philo);
 	return (0);
 }
 
 int	do_eat(t_philo *philo)
 {
-	printf("%ld %ld is eating\n", time_passed(((t_philo_param *)(philo->param))->clock), philo->philo_number);
-	usleep(((t_philo_param *)(philo->param))->time_to_eat * 1000);
-	if (pthread_mutex_unlock(&(philo->l_fork)))
+	if (is_dead(philo) == FALSE)
+	{
+		do_print(EAT, philo);
+		usleep(((t_philo_param *)(philo->param))->time_to_eat * 1000);
+	}
+	if (pthread_mutex_unlock(philo->l_fork))
 		return (ft_putstr_fd("Mutex unlock error\n", 2), 1);
-	if (pthread_mutex_unlock(&(philo->r_fork)))
+	if (pthread_mutex_unlock(philo->r_fork))
 		return (ft_putstr_fd("Mutex unlock error\n", 2), 1);
 	return (0);
 }
 
-int	do_sleep(t_philo *philo, struct timeval start)
+int	do_sleep(t_philo *philo)
 {
 	if (is_dead(philo) == FALSE)
 	{
-		if (time_passed(start) + ((t_philo_param *)(philo->param))->time_to_sleep
-			>= ((t_philo_param *)(philo->param))->time_to_die)
-		{
-			do_die(philo);
-			return (0);
-		}
-		printf("%ld %ld is sleeping\n", time_passed(((t_philo_param *)(philo->param))->clock), philo->philo_number);
+		do_print(SLEEP, philo);
 		usleep(((t_philo_param *)(philo->param))->time_to_sleep * 1000);
 	}
 	return (0);
 }
 
-int	do_think(t_philo *philo, struct timeval start)
+int	do_think(t_philo *philo)
 {
 	if (is_dead(philo) == FALSE)
-	{
-		printf("%ld %ld is thinking\n", time_passed(((t_philo_param *)(philo->param))->clock), philo->philo_number);
-		if (time_passed(start) + ((t_philo_param *)(philo->param))->time_to_eat
-			>= ((t_philo_param *)(philo->param))->time_to_die)
-			do_die(philo);
-	}
+		do_print(THINK, philo);
 	return (0);
 }
 
@@ -113,29 +107,30 @@ void	*pthread_fct(void *argument)
 {
 	t_philo			*philo;
 	int				count;
-	struct timeval	start;
 
 	count = 0;
 	philo = (t_philo *)argument;
-	gettimeofday(&start, NULL);
-	while (count < 5 && is_dead(philo) == FALSE)
+	while (is_dead(philo) == FALSE)
 	{
 		if (philo->philo_number % 2 == 0)
 		{
-			take_left(philo, start);
-			take_right(philo, start);
+			take_left(philo);
+			take_right(philo);
 		}
 		else
 		{
-			take_right(philo, start);
-			take_left(philo, start);
+			take_right(philo);
+			take_left(philo);
 		}
+		philo->last_eat = time_passed(((t_philo_param *)(philo->param))->clock);
 		do_eat(philo);
-		gettimeofday(&start, NULL);
-		do_sleep(philo, start);
-		do_think(philo, start);
+		philo->last_eat = time_passed(((t_philo_param *)(philo->param))->clock);
+		do_sleep(philo);
+		do_think(philo);
 		count++;
 	}
+	if (count == 5)
+		printf("Every one ate the maximum");
 	return (NULL);
 }
 

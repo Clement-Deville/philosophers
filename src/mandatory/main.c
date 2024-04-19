@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 10:28:30 by cdeville          #+#    #+#             */
-/*   Updated: 2024/04/18 19:34:12 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/04/19 16:58:00 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,18 @@ int	destroy_mutex(t_philo_param *param)
 		if (pthread_mutex_destroy(&(param->forks[i])))
 		{
 			ft_putstr_fd("Error at mutex destory\n", 2);
+			pthread_mutex_destroy(&(param->mutex_is_dead));
+			pthread_mutex_destroy(&(param->print));
 			return (-1);
 		}
 		i++;
 	}
 	if (pthread_mutex_destroy(&(param->mutex_is_dead)))
+	{
+		ft_putstr_fd("Error at mutex destory\n", 2);
+		return (pthread_mutex_destroy(&(param->print)), -1);
+	}
+	if (pthread_mutex_destroy(&(param->print)))
 	{
 		ft_putstr_fd("Error at mutex destory\n", 2);
 		return (-1);
@@ -59,7 +66,9 @@ int	main(int argc, char *argv[])
 		pthread_create(&(param.threads[i]), NULL, pthread_fct, (void *)&(param.philo_tab[i]));
 		i++;
 	}
-	sleep(1);
+	if (check_if_someone_died(&param) != 0)
+		//do something;
+	usleep(100);
 	if (join_all(param) != 0)
 		return (clean_exit(param), 1);
 	return (clean_exit(param) || 0);

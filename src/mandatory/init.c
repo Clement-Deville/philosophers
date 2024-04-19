@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 13:43:18 by cdeville          #+#    #+#             */
-/*   Updated: 2024/04/19 10:11:09 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/04/19 14:42:18 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,18 @@ int	create_philo(t_philo_param *param)
 	if (param->number_of_philosophers >= 1)
 	{
 		(param->philo_tab[0]).philo_number = 1;
-		(param->philo_tab[0]).l_fork = param->forks[0];
+		(param->philo_tab[0]).l_fork = &(param->forks[0]);
 		(param->philo_tab[0]).r_fork
-			= param->forks[param->number_of_philosophers - 1];
+			= &(param->forks[param->number_of_philosophers - 1]);
+		(param->philo_tab[0]).last_eat = 0;
 		(param->philo_tab[0]).param = param;
 	}
 	while (i < param->number_of_philosophers)
 	{
 		(param->philo_tab[i]).philo_number = i + 1;
-		(param->philo_tab[i]).l_fork = param->forks[i];
-		(param->philo_tab[i]).r_fork = param->forks[i - 1];
+		(param->philo_tab[i]).l_fork = &(param->forks[i]);
+		(param->philo_tab[i]).r_fork = &(param->forks[i - 1]);
+		(param->philo_tab[i]).last_eat = 0;
 		(param->philo_tab[i]).param = param;
 		i++;
 	}
@@ -58,7 +60,8 @@ int	init_mutex(t_philo_param *param)
 		}
 		i++;
 	}
-	if (pthread_mutex_init(&(param->mutex_is_dead), NULL))
+	if (pthread_mutex_init(&(param->mutex_is_dead), NULL)
+		|| pthread_mutex_init(&(param->print), NULL))
 	{
 		ft_putstr_fd("Error at mutex init\n", 2);
 		return (-1);
@@ -66,9 +69,10 @@ int	init_mutex(t_philo_param *param)
 	return (0);
 }
 
+//bien penser a destroy si un echoue
+
 int	init(t_philo_param *param, int argc, char *argv[])
 {
-
 	if (argc < 5 || argc > 6)
 		return (ft_putstr_fd("Wrong number of arguments\n", 2), 1);
 	if (is_valid_parameters(argc, argv) == FALSE)
@@ -97,14 +101,5 @@ int	init(t_philo_param *param, int argc, char *argv[])
 	param->is_dead = FALSE;
 	gettimeofday(&(param->clock), NULL);
 	create_philo(param);
-	int	i;
-
-	i = 0;
-	while(i < param->number_of_philosophers)
-	{
-		printf("Philo %d: \nL: %p\nR: %p\n", i + 1, &(param->philo_tab[i].l_fork), &(param->philo_tab[i].l_fork));
-		// printf("Fork %d: %p\n", i + 1, &(param->forks[i]));
-		i++;
-	}
 	return (0);
 }

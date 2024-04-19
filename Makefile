@@ -9,7 +9,9 @@ FLAGS = -Wall -Wextra -Werror
 DEBUG = -g
 
 SRCS_FILES =	main	\
+				check	\
 				init	\
+				print	\
 				thread	\
 				utils	\
 
