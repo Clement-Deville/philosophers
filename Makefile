@@ -9,10 +9,13 @@ FLAGS = -Wall -Wextra -Werror
 DEBUG = -g
 
 SRCS_FILES =	main	\
+				actions	\
 				check	\
+				forks	\
 				init	\
 				print	\
 				thread	\
+				time	\
 				utils	\
 
 SRCS_FILES_BONUS =	main_bonus	\
