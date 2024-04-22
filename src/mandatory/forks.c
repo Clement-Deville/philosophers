@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/20 12:56:47 by cdeville          #+#    #+#             */
-/*   Updated: 2024/04/20 17:44:31 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/04/22 18:42:54 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,37 @@
 int	take_left(t_philo *philo)
 {
 	if (pthread_mutex_lock(philo->l_fork))
-		return (ft_putstr_fd("Mutex lock error\n", 2), 1);
-	if (is_someone_is_dead(philo->param) == FALSE)
+	{
+		set_error(philo->param);
+		if (philo->philo_number % 2 == 1)
+			pthread_mutex_unlock(philo->r_fork);
+		return (1);
+	}
+	if (do_continue(philo))
 		do_print(FORK, philo);
 	return (0);
 }
 
 int	take_right(t_philo *philo)
 {
+	static int	count;
+
+	count++;
+	if (count == 3)
+	{
+		set_error(philo->param);
+		if (philo->philo_number % 2 == 0)
+			pthread_mutex_unlock(philo->l_fork);
+		return (1);
+	}
 	if (pthread_mutex_lock(philo->r_fork))
-		return (ft_putstr_fd("Mutex lock error\n", 2), 1);
-	if (is_someone_is_dead(philo->param) == FALSE)
+	{
+		set_error(philo->param);
+		if (philo->philo_number % 2 == 0)
+			pthread_mutex_unlock(philo->l_fork);
+		return (1);
+	}
+	if (do_continue(philo))
 		do_print(FORK, philo);
 	return (0);
 }
@@ -34,13 +54,13 @@ int	take_forks(t_philo *philo)
 {
 	if (philo->philo_number % 2 == 0)
 	{
-		take_left(philo);
-		take_right(philo);
+		if (take_left(philo) || take_right(philo))
+			return (1);
 	}
 	else
 	{
-		take_right(philo);
-		take_left(philo);
+		if (take_right(philo) || take_left(philo))
+			return (1);
 	}
 	return (0);
 }

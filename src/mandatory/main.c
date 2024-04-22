@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 10:28:30 by cdeville          #+#    #+#             */
-/*   Updated: 2024/04/20 17:05:46 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/04/22 14:54:39 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,26 +15,21 @@
 int	destroy_mutex(t_philo_param *param)
 {
 	int	i;
-	int	status;
+	int	ret;
 
 	i = 0;
+	ret = 0;
 	while (i < param->number_of_philosophers)
 	{
-		if (pthread_mutex_destroy(&(param->forks[i])))
-		{
-			ft_putstr_fd("Error at mutex destory\n", 2);
-			pthread_mutex_destroy(&(param->mutex_is_dead));
-			pthread_mutex_destroy(&(param->print));
-			return (1);
-		}
+		ret = (ret || pthread_mutex_destroy(&((param->philo_tab[i]).mutex_ate_enought))
+				|| pthread_mutex_destroy(&(param->forks[i])));
 		i++;
 	}
-	if (pthread_mutex_destroy(&(param->mutex_is_dead)))
-	{
-		ft_putstr_fd("Error at mutex destory\n", 2);
-		return (pthread_mutex_destroy(&(param->print)), 1);
-	}
-	if (pthread_mutex_destroy(&(param->print)))
+	ret = (pthread_mutex_destroy(&(param->mutex_is_dead)) || ret);
+	ret = (pthread_mutex_destroy(&(param->print)) || ret);
+	ret = (pthread_mutex_destroy(&(param->mutex_everyone_ate)) || ret);
+	ret = (pthread_mutex_destroy(&(param->mutex_error)) || ret);
+	if (ret)
 	{
 		ft_putstr_fd("Error at mutex destory\n", 2);
 		return (1);
@@ -46,8 +41,8 @@ int	clean_exit(t_philo_param param)
 {
 	int	status;
 
-	status = 0;
-	status = destroy_mutex(&param);
+	status = found_error(&param);
+	status = (destroy_mutex(&param) || status);
 	free(param.philo_tab);
 	free(param.forks);
 	free(param.threads);
@@ -58,6 +53,7 @@ int	main(int argc, char *argv[])
 {
 	t_philo_param	param;
 	long			i;
+	t_bool			error;
 
 	i = 0;
 	if (init(&param, argc, argv))
@@ -70,14 +66,13 @@ int	main(int argc, char *argv[])
 			set_error(&param);
 			if (join_valids(param, i))
 				return (clean_exit(param), 1);
-			return (clean_exit(param) || 0);
+			return (clean_exit(param));
 		}
 		i++;
 	}
-	if (check_if_someone_died(&param) != 0)
-		//do something;
+	error = check_stop_conditions(&param);
 	usleep(100);
 	if (join_all(param) != 0)
 		return (clean_exit(param), 1);
-	return (clean_exit(param) || 0);
+	return (clean_exit(param) || error);
 }

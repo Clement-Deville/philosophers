@@ -11,8 +11,10 @@ DEBUG = -g
 SRCS_FILES =	main	\
 				actions	\
 				check	\
+				error	\
 				forks	\
 				init	\
+				monitoring	\
 				print	\
 				thread	\
 				time	\

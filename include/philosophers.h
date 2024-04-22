@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 10:29:03 by cdeville          #+#    #+#             */
-/*   Updated: 2024/04/20 17:41:17 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/04/22 18:44:26 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 # define SLEEP 3
 # define THINK 4
 # define EVERYONE_ATE 5
+# define CRITIC_ERROR 6
 
 typedef int	t_bool;
 
@@ -71,6 +72,12 @@ int		do_think(t_philo *philo);
 
 t_bool	is_someone_is_dead(t_philo_param *param);
 int		check_if_someone_died(t_philo_param *param);
+t_bool	do_continue(t_philo *philo);
+
+// ERROR
+
+void	set_error(t_philo_param *param);
+t_bool	found_error(t_philo_param *param);
 
 // FORKS
 
@@ -79,6 +86,10 @@ int		take_forks(t_philo *philo);
 // INIT
 
 int		init(t_philo_param *param, int argc, char *argv[]);
+
+// MONITORING
+
+int		check_stop_conditions(t_philo_param *param);
 
 // PRINT
 

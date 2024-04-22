@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 13:41:40 by cdeville          #+#    #+#             */
-/*   Updated: 2024/04/20 17:28:53 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/04/22 18:24:13 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ void	*pthread_fct(void *argument)
 	philo = (t_philo *)argument;
 	while (do_continue(philo) == TRUE)
 	{
-		take_forks(philo);
+		if (take_forks(philo))
+			return (NULL);
 		do_eat(philo);
 		do_sleep(philo);
 		do_think(philo);
@@ -46,21 +47,17 @@ int	join_valids(t_philo_param param, int size)
 {
 	int	status;
 	int	return_status;
-	int	thread_return;
 
 	status = 0;
 	return_status = 0;
-	thread_return = 0;
 	while (size >= 0)
 	{
-		status = pthread_join(param.threads[size], (void **)&thread_return);
+		status = pthread_join(param.threads[size], NULL);
 		if (status)
 		{
 			ft_putstr_fd("Error when joining\n", 2);
 			return_status = status;
 		}
-		if (thread_return)
-			return_status = thread_return;
 		size--;
 	}
 	return (return_status);
@@ -71,22 +68,18 @@ int	join_all(t_philo_param param)
 	int	i;
 	int	status;
 	int	return_status;
-	int	thread_return;
 
 	i = 0;
 	status = 0;
 	return_status = 0;
-	thread_return = 0;
 	while (i < param.number_of_philosophers)
 	{
-		status = pthread_join(param.threads[i], (void **)&thread_return);
+		status = pthread_join(param.threads[i], NULL);
 		if (status)
 		{
 			ft_putstr_fd("Error when joining\n", 2);
 			return_status = status;
 		}
-		if (thread_return)
-			return_status = thread_return;
 		i++;
 	}
 	return (return_status);

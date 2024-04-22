@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 13:43:18 by cdeville          #+#    #+#             */
-/*   Updated: 2024/04/20 17:08:23 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/04/22 17:39:37 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	create_philo(t_philo_param *param)
 	int	i;
 
 	i = 1;
-	if (param->number_of_philosophers >= 1)
+	if (param->number_of_philosophers >= 2)
 	{
 		(param->philo_tab[0]).philo_number = 1;
 		(param->philo_tab[0]).l_fork = &(param->forks[0]);
@@ -35,6 +35,18 @@ void	create_philo(t_philo_param *param)
 		(param->philo_tab[i]).param = param;
 		i++;
 	}
+// HANDLE INIT FAIL BY PROPERLY DESTRO THE REST
+	i = 0;
+	while (i < param->number_of_philosophers)
+	{
+		if (pthread_mutex_init(&((param->philo_tab[i]).mutex_ate_enought), NULL))
+		{
+			ft_putstr_fd("Error at mutex init\n", 2);
+			return ;
+		}
+		(param->philo_tab[i]).ate_enought = FALSE;
+		i++;
+	}
 }
 
 t_bool	is_valid_parameters(int argc, char *argv[])
@@ -48,7 +60,7 @@ t_bool	is_valid_parameters(int argc, char *argv[])
 int	init_mutex(t_philo_param *param)
 {
 	int	i;
-
+// HANDLE INIT FAIL BY PROPERLY DESTRO THE REST
 	i = 0;
 	while (i < param->number_of_philosophers)
 	{
@@ -60,7 +72,9 @@ int	init_mutex(t_philo_param *param)
 		i++;
 	}
 	if (pthread_mutex_init(&(param->mutex_is_dead), NULL)
-		|| pthread_mutex_init(&(param->print), NULL))
+		|| pthread_mutex_init(&(param->print), NULL)
+		|| pthread_mutex_init(&(param->mutex_everyone_ate), NULL)
+		||  pthread_mutex_init(&(param->mutex_error), NULL))
 	{
 		ft_putstr_fd("Error at mutex init\n", 2);
 		return (1);
