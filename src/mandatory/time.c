@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/20 12:58:52 by cdeville          #+#    #+#             */
-/*   Updated: 2024/04/20 12:59:25 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/01 13:57:59 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ long	get_time(void)
 	return (ms);
 }
 
-long	time_passed(struct timeval start)
+long	time_passed(const struct timeval start)
 {
 	struct timeval	end;
 	long			miliseconds;

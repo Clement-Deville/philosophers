@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 10:29:03 by cdeville          #+#    #+#             */
-/*   Updated: 2024/04/22 18:44:26 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/01 13:58:41 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ int		join_valids(t_philo_param param, int size);
 // TIME
 
 long	get_time(void);
-long	time_passed(struct timeval start);
+long	time_passed(const struct timeval start);
 
 // UTILS
 

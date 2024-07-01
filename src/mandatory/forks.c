@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/20 12:56:47 by cdeville          #+#    #+#             */
-/*   Updated: 2024/04/22 18:42:54 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/01 13:19:48 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,19 +28,15 @@ int	take_left(t_philo *philo)
 
 int	take_right(t_philo *philo)
 {
-	static int	count;
-
-	count++;
-	if (count == 3)
-	{
-		set_error(philo->param);
-		if (philo->philo_number % 2 == 0)
-			pthread_mutex_unlock(philo->l_fork);
-		return (1);
-	}
+	// if (pthread_mutex_lock(philo->l_fork))
+	// {
+	// 	set_error(philo->param);
+	// 	if (philo->philo_number % 2 == 0)
+	// 		pthread_mutex_unlock(philo->l_fork);
+	// 	return (1);
+	// }
 	if (pthread_mutex_lock(philo->r_fork))
 	{
-		set_error(philo->param);
 		if (philo->philo_number % 2 == 0)
 			pthread_mutex_unlock(philo->l_fork);
 		return (1);

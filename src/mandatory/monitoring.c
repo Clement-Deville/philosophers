@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 13:49:53 by cdeville          #+#    #+#             */
-/*   Updated: 2024/04/22 14:39:42 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/01 13:28:59 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ t_bool	check_if_everyone_ate_enought(t_philo_param *param)
 		i++;
 	}
 	set_everyone_ate(param);
+	usleep (200);
 	do_print(EVERYONE_ATE, &(param->philo_tab[0]));
 	return (TRUE);
 }

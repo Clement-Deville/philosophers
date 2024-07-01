@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 10:28:30 by cdeville          #+#    #+#             */
-/*   Updated: 2024/04/22 14:54:39 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/01 13:34:40 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ int	main(int argc, char *argv[])
 	long			i;
 	t_bool			error;
 
+	// Gerer le cas ou il n'y a qu'un philo
 	i = 0;
 	if (init(&param, argc, argv))
 		return (1);

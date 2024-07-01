@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 13:43:18 by cdeville          #+#    #+#             */
-/*   Updated: 2024/04/22 17:39:37 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/01 11:39:35 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ int	init(t_philo_param *param, int argc, char *argv[])
 {
 	if (argc < 5 || argc > 6)
 		return (ft_putstr_fd("Wrong number of arguments\n", 2), 1);
+	// refaire la verification
 	if (is_valid_parameters(argc, argv) == FALSE)
 		return (1);
 	param->number_of_philosophers = ft_atoi(argv[1]);

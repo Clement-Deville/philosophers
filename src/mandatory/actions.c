@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/20 12:54:47 by cdeville          #+#    #+#             */
-/*   Updated: 2024/04/22 18:20:52 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/01 12:04:27 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,9 @@ int	do_eat(t_philo *philo)
 	usleep(philo->param->time_to_eat * 1000);
 	philo->last_eat = time_passed(philo->param->clock);
 	if (pthread_mutex_unlock(philo->l_fork))
-		return (set_error(philo->param) , 1);
+		return (set_error(philo->param), 1);
 	if (pthread_mutex_unlock(philo->r_fork))
-		return (set_error(philo->param) , 1);
+		return (set_error(philo->param), 1);
 	return (0);
 }
 
