@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 13:49:53 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/01 13:28:59 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/01 15:17:58 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,11 @@ t_bool	check_if_someone_died(t_philo_param *param)
 	i = 0;
 	while (i < param->number_of_philosophers)
 	{
+		if (pthread_mutex_lock(&(param->philo_tab[i].mutex_last_eat)))
+			return (set_error(param), FALSE);
 		timer = time_passed(param->clock) - param->philo_tab[i].last_eat;
+		if (pthread_mutex_unlock(&(param->philo_tab[i].mutex_last_eat)))
+			return (set_error(param), FALSE);
 		if (timer >= param->time_to_die)
 		{
 			do_die(&(param->philo_tab[i]));
@@ -51,8 +55,12 @@ t_bool	check_if_everyone_ate_enought(t_philo_param *param)
 	{
 		if (pthread_mutex_lock(&(param->mutex_everyone_ate)))
 			return (set_error(param), FALSE);
+		if (pthread_mutex_lock(&(param->philo_tab[i].mutex_ate_enought)))
+			return (pthread_mutex_unlock(&(param->mutex_everyone_ate)),
+				set_error(param), FALSE);
 		did_everyone_ate = param->philo_tab[i].ate_enought;
-		if (pthread_mutex_unlock(&(param->mutex_everyone_ate)))
+		if (pthread_mutex_unlock(&(param->mutex_everyone_ate))
+			|| pthread_mutex_unlock(&(param->philo_tab[i].mutex_ate_enought)))
 			return (set_error(param), FALSE);
 		if (did_everyone_ate == FALSE)
 			return (FALSE);

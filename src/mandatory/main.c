@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 10:28:30 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/01 13:34:40 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/01 15:14:42 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ int	destroy_mutex(t_philo_param *param)
 	while (i < param->number_of_philosophers)
 	{
 		ret = (ret || pthread_mutex_destroy(&((param->philo_tab[i]).mutex_ate_enought))
-				|| pthread_mutex_destroy(&(param->forks[i])));
+				|| pthread_mutex_destroy(&(param->forks[i]))
+				|| pthread_mutex_destroy(&((param->philo_tab[i]).mutex_last_eat)));
 		i++;
 	}
 	ret = (pthread_mutex_destroy(&(param->mutex_is_dead)) || ret);
@@ -76,4 +77,5 @@ int	main(int argc, char *argv[])
 	if (join_all(param) != 0)
 		return (clean_exit(param), 1);
 	return (clean_exit(param) || error);
+	return (0);
 }

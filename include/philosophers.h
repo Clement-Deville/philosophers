@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 10:29:03 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/01 13:58:41 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/01 15:46:08 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ typedef struct s_philo{
 	pthread_mutex_t			*l_fork;
 	pthread_mutex_t			*r_fork;
 	long					last_eat;
+	pthread_mutex_t			mutex_last_eat;
 	t_bool					ate_enought;
 	pthread_mutex_t			mutex_ate_enought;
 	struct s_philo_param	*param;
@@ -70,7 +71,7 @@ int		do_think(t_philo *philo);
 
 // CHECK
 
-t_bool	is_someone_is_dead(t_philo_param *param);
+t_bool	someone_is_dead(t_philo_param *param);
 int		check_if_someone_died(t_philo_param *param);
 t_bool	do_continue(t_philo *philo);
 

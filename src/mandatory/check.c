@@ -6,13 +6,13 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 16:38:49 by cdeville          #+#    #+#             */
-/*   Updated: 2024/06/28 13:55:22 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/01 15:46:08 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <philosophers.h>
 
-t_bool	is_someone_is_dead(t_philo_param *param)
+t_bool	someone_is_dead(t_philo_param *param)
 {
 	t_bool	status;
 
@@ -38,7 +38,7 @@ t_bool	everyone_ate(t_philo *philo)
 
 t_bool	do_continue(t_philo *philo)
 {
-	if (found_error(philo->param) || is_someone_is_dead(philo->param) == TRUE
+	if (found_error(philo->param) || someone_is_dead(philo->param) == TRUE
 		|| everyone_ate(philo) == TRUE)
 		return (FALSE);
 	else

@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 13:43:18 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/01 11:39:35 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/01 14:07:02 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ void	create_philo(t_philo_param *param)
 	i = 0;
 	while (i < param->number_of_philosophers)
 	{
-		if (pthread_mutex_init(&((param->philo_tab[i]).mutex_ate_enought), NULL))
+		if (pthread_mutex_init(&((param->philo_tab[i]).mutex_ate_enought), NULL)
+			|| pthread_mutex_init(&((param->philo_tab[i]).mutex_last_eat), NULL))
 		{
 			ft_putstr_fd("Error at mutex init\n", 2);
 			return ;
@@ -74,7 +75,7 @@ int	init_mutex(t_philo_param *param)
 	if (pthread_mutex_init(&(param->mutex_is_dead), NULL)
 		|| pthread_mutex_init(&(param->print), NULL)
 		|| pthread_mutex_init(&(param->mutex_everyone_ate), NULL)
-		||  pthread_mutex_init(&(param->mutex_error), NULL))
+		|| pthread_mutex_init(&(param->mutex_error), NULL))
 	{
 		ft_putstr_fd("Error at mutex init\n", 2);
 		return (1);
