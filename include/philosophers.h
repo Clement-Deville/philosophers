@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 10:29:03 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/02 12:52:56 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/02 16:38:12 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,12 @@ int		take_forks(t_philo *philo);
 
 int		init(t_philo_param *param, int argc, char *argv[]);
 
+// is_valid_arg
+
+t_bool	is_pos_int(char *arg);
+t_bool	is_valid_parameters(int argc, char *argv[]);
+int		number_size(char *number);
+
 // MONITORING
 
 int		check_stop_conditions(t_philo_param *param);
@@ -99,6 +105,7 @@ int		do_print(int message_id, t_philo *philo);
 // THREAD
 
 void	*pthread_fct(void *argument);
+void	*pthread_fct_for_one(void *argument);
 int		join_all(t_philo_param *param);
 int		join_valids(t_philo_param *param, int size);
 

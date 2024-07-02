@@ -14,6 +14,7 @@ SRCS_FILES =	main	\
 				error	\
 				forks	\
 				init	\
+				is_valid_arg	\
 				monitoring	\
 				print	\
 				thread	\

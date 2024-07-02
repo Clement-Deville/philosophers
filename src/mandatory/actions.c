@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/20 12:54:47 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/01 15:49:52 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/02 15:16:09 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	do_die(t_philo *philo)
 	if (philo->param->is_dead == TRUE)
 	{
 		if (pthread_mutex_unlock(&(philo->param->mutex_is_dead)))
-			return (set_error(philo->param) , 1);
+			return (set_error(philo->param), 1);
 		return (0);
 	}
 	philo->param->is_dead = TRUE;
@@ -53,9 +53,8 @@ int	do_eat(t_philo *philo)
 	philo->last_eat = time_passed(philo->param->clock);
 	if (pthread_mutex_unlock(&(philo->mutex_last_eat)))
 		return (set_error(philo->param), 1);
-	if (pthread_mutex_unlock(philo->l_fork))
-		return (set_error(philo->param), 1);
-	if (pthread_mutex_unlock(philo->r_fork))
+	if (pthread_mutex_unlock(philo->l_fork)
+		|| pthread_mutex_unlock(philo->r_fork))
 		return (set_error(philo->param), 1);
 	return (0);
 }

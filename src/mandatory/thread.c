@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 13:41:40 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/02 13:04:11 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/02 14:53:25 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,24 +43,24 @@ void	*pthread_fct(void *argument)
 	return (NULL);
 }
 
-// void	*pthread_fct_for_one(void *argument)
-// {
-// 	t_philo			*philo;
+void	*pthread_fct_for_one(void *argument)
+{
+	t_philo			*philo;
 
-// 	philo = (t_philo *)argument;
-// 	if (pthread_mutex_lock(philo->l_fork))
-// 	{
-// 		set_error(philo->param);
-// 		return (NULL);
-// 	}
-// 	if (pthread_mutex_lock(philo->l_fork))
-// 	{
-// 		set_error(philo->param);
-// 		return (NULL);
-// 	}
-// 	do_print(FORK, philo);
-// 	philo
-// }
+	philo = (t_philo *)argument;
+	if (pthread_mutex_lock(philo->r_fork))
+	{
+		set_error(philo->param);
+		return (NULL);
+	}
+	if (pthread_mutex_unlock(philo->r_fork))
+	{
+		set_error(philo->param);
+		return (NULL);
+	}
+	do_print(FORK, philo);
+	return (NULL);
+}
 
 int	join_valids(t_philo_param *param, int size)
 {

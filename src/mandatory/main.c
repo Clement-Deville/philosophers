@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 10:28:30 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/02 12:54:09 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/02 15:14:14 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,12 @@ int	destroy_mutex(t_philo_param *param)
 	ret = 0;
 	while (i < param->number_of_philosophers)
 	{
-		ret = (ret || pthread_mutex_destroy(&((param->philo_tab[i]).mutex_ate_enought))
+		ret = (ret
+				|| pthread_mutex_destroy(&((param->philo_tab[i])
+						.mutex_ate_enought))
 				|| pthread_mutex_destroy(&(param->forks[i]))
-				|| pthread_mutex_destroy(&((param->philo_tab[i]).mutex_last_eat)));
+				|| pthread_mutex_destroy(&((param->philo_tab[i])
+						.mutex_last_eat)));
 		i++;
 	}
 	ret = (pthread_mutex_destroy(&(param->mutex_is_dead)) || ret);
@@ -50,32 +53,57 @@ int	clean_exit(t_philo_param *param)
 	return (status);
 }
 
+int	execute_one(t_philo_param *param)
+{
+	if (pthread_create(&(param->threads[0]),
+			NULL, pthread_fct_for_one, (void *)&(param->philo_tab[0])))
+	{
+		set_error(param);
+		return (clean_exit(param));
+	}
+	return (0);
+}
+
+int	execute_multi(t_philo_param *param)
+{
+	long	i;
+
+	i = 0;
+	while (i < param->number_of_philosophers)
+	{
+		if (pthread_create(&(param->threads[i]),
+				NULL, pthread_fct, (void *)&(param->philo_tab[i])))
+		{
+			set_error(param);
+			if (join_valids(param, i))
+				return (clean_exit(param), 1);
+			return (clean_exit(param));
+		}
+		i++;
+	}
+	return (0);
+}
+
 int	main(int argc, char *argv[])
 {
 	t_philo_param	param;
-	long			i;
 	t_bool			error;
 
-	// Gerer le cas ou il n'y a qu'un philo
-	i = 0;
 	if (init(&param, argc, argv))
 		return (1);
-	while (i < param.number_of_philosophers)
+	if (param.number_of_philosophers == 1)
 	{
-		if (pthread_create(&(param.threads[i]),
-				NULL, pthread_fct, (void *)&(param.philo_tab[i])))
-		{
-			set_error(&param);
-			if (join_valids(&param, i))
-				return (clean_exit(&param), 1);
-			return (clean_exit(&param));
-		}
-		i++;
+		if (execute_one(&param))
+			return (1);
+	}
+	else
+	{
+		if (execute_multi(&param))
+			return (1);
 	}
 	error = check_stop_conditions(&param);
 	usleep(100);
 	if (join_all(&param) != 0)
 		return (clean_exit(&param), 1);
 	return (clean_exit(&param) || error);
-	return (0);
 }
