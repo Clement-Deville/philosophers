@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 13:41:40 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/01 16:08:30 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/02 13:04:11 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,26 @@ void	*pthread_fct(void *argument)
 	return (NULL);
 }
 
-int	join_valids(t_philo_param param, int size)
+// void	*pthread_fct_for_one(void *argument)
+// {
+// 	t_philo			*philo;
+
+// 	philo = (t_philo *)argument;
+// 	if (pthread_mutex_lock(philo->l_fork))
+// 	{
+// 		set_error(philo->param);
+// 		return (NULL);
+// 	}
+// 	if (pthread_mutex_lock(philo->l_fork))
+// 	{
+// 		set_error(philo->param);
+// 		return (NULL);
+// 	}
+// 	do_print(FORK, philo);
+// 	philo
+// }
+
+int	join_valids(t_philo_param *param, int size)
 {
 	int	status;
 	int	return_status;
@@ -52,7 +71,7 @@ int	join_valids(t_philo_param param, int size)
 	return_status = 0;
 	while (size >= 0)
 	{
-		status = pthread_join(param.threads[size], NULL);
+		status = pthread_join(param->threads[size], NULL);
 		if (status)
 		{
 			ft_putstr_fd("Error when joining\n", 2);
@@ -63,7 +82,7 @@ int	join_valids(t_philo_param param, int size)
 	return (return_status);
 }
 
-int	join_all(t_philo_param param)
+int	join_all(t_philo_param *param)
 {
 	int	i;
 	int	status;
@@ -72,9 +91,9 @@ int	join_all(t_philo_param param)
 	i = 0;
 	status = 0;
 	return_status = 0;
-	while (i < param.number_of_philosophers)
+	while (i < param->number_of_philosophers)
 	{
-		status = pthread_join(param.threads[i], NULL);
+		status = pthread_join(param->threads[i], NULL);
 		if (status)
 		{
 			ft_putstr_fd("Error when joining\n", 2);

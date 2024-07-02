@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 10:28:30 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/01 15:14:42 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/02 12:54:09 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,15 +38,15 @@ int	destroy_mutex(t_philo_param *param)
 	return (0);
 }
 
-int	clean_exit(t_philo_param param)
+int	clean_exit(t_philo_param *param)
 {
 	int	status;
 
-	status = found_error(&param);
-	status = (destroy_mutex(&param) || status);
-	free(param.philo_tab);
-	free(param.forks);
-	free(param.threads);
+	status = found_error(param);
+	status = (destroy_mutex(param) || status);
+	free(param->philo_tab);
+	free(param->forks);
+	free(param->threads);
 	return (status);
 }
 
@@ -66,16 +66,16 @@ int	main(int argc, char *argv[])
 				NULL, pthread_fct, (void *)&(param.philo_tab[i])))
 		{
 			set_error(&param);
-			if (join_valids(param, i))
-				return (clean_exit(param), 1);
-			return (clean_exit(param));
+			if (join_valids(&param, i))
+				return (clean_exit(&param), 1);
+			return (clean_exit(&param));
 		}
 		i++;
 	}
 	error = check_stop_conditions(&param);
 	usleep(100);
-	if (join_all(param) != 0)
-		return (clean_exit(param), 1);
-	return (clean_exit(param) || error);
+	if (join_all(&param) != 0)
+		return (clean_exit(&param), 1);
+	return (clean_exit(&param) || error);
 	return (0);
 }
