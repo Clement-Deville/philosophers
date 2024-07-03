@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 13:41:40 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/02 14:53:25 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/03 14:56:17 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	*pthread_fct(void *argument)
 		do_sleep(philo);
 		do_think(philo);
 		count++;
-		if (count >= philo->param->max_eat)
+		if (count == philo->param->max_eat)
 			set_one_ate_enought(philo);
 	}
 	return (NULL);

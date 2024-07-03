@@ -24,6 +24,10 @@ SRCS_FILES =	main	\
 				utils	\
 
 SRCS_FILES_BONUS =	main_bonus	\
+					clear_bonus	\
+					create_philo_bonus	\
+					is_valid_arg_bonus	\
+					utils_bonus	\
 
 INCLUDES_FILES = philosophers
 
@@ -64,7 +68,7 @@ $(NAME): $(OBJS)
 
 $(NAME_B): $(OBJS_B)
 	@echo "\e[0;32m\nLinking executable:\n\e[0m"
-	$(CC) $(FLAGS) $(OBJS_B) $(DEBUG) -o $(NAME_B)
+	$(CC) $(FLAGS) -lpthread -lrt $(OBJS_B) $(DEBUG) -o $(NAME_B)
 	@echo "\e[0;32m\nBonus Compiled !\e[0m"
 
 clean:

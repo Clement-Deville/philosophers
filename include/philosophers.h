@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 10:29:03 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/03 10:55:34 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/03 16:40:53 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,6 @@ long	time_passed(const struct timeval start);
 // UTILS
 
 void	ft_putstr_fd(char *s, int fd);
-void	ft_putnbr_fd(int n, int fd);
 int		ft_atoi(const char *nptr);
 
 #endif
