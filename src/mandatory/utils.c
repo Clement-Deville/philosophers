@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 14:50:23 by cdeville          #+#    #+#             */
-/*   Updated: 2024/04/20 12:59:08 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/03 10:57:30 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,21 +29,6 @@ void	ft_putstr_fd(char *s, int fd)
 		ft_putchar_fd(s[i], fd);
 		i++;
 	}
-}
-
-void	ft_putnbr_fd(int n, int fd)
-{
-	long	nb;
-
-	nb = (long)n;
-	if (nb < 0)
-	{
-		ft_putchar_fd('-', fd);
-		nb *= -1;
-	}
-	if (nb / 10)
-		ft_putnbr_fd(nb / 10, fd);
-	ft_putchar_fd((nb % 10) + '0', fd);
 }
 
 static int	ft_isspace(int c)

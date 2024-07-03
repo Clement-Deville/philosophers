@@ -6,69 +6,11 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 13:43:18 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/02 17:27:58 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/03 10:52:13 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <philosophers.h>
-
-void	set_philo_param(t_philo_param *param)
-{
-	int	i;
-
-	i = 1;
-	if (param->number_of_philosophers >= 1)
-	{
-		(param->philo_tab[0]).philo_number = 1;
-		(param->philo_tab[0]).l_fork = &(param->forks[0]);
-		(param->philo_tab[0]).r_fork
-			= &(param->forks[param->number_of_philosophers - 1]);
-		(param->philo_tab[0]).last_eat = 0;
-		(param->philo_tab[0]).param = param;
-	}
-	while (i < param->number_of_philosophers)
-	{
-		(param->philo_tab[i]).philo_number = i + 1;
-		(param->philo_tab[i]).l_fork = &(param->forks[i]);
-		(param->philo_tab[i]).r_fork = &(param->forks[i - 1]);
-		(param->philo_tab[i]).last_eat = 0;
-		(param->philo_tab[i]).param = param;
-		i++;
-	}
-}
-
-int	set_philo_mutex(t_philo_param *param)
-{
-	int	i;
-
-	i = 0;
-	while (i < param->number_of_philosophers)
-	{
-		if (pthread_mutex_init(&((param->philo_tab[i]).mutex_ate_enought), NULL)
-			|| pthread_mutex_init(&((param->philo_tab[i])
-					.mutex_last_eat), NULL))
-		{
-			ft_putstr_fd("Error at mutex init\n", 2);
-			while (i >= 0)
-			{
-				pthread_mutex_destroy(&((param->philo_tab[i])
-						.mutex_ate_enought));
-				pthread_mutex_destroy(&((param->philo_tab[i]).mutex_last_eat));
-				i--;
-			}
-			return (1);
-		}
-		(param->philo_tab[i]).ate_enought = FALSE;
-		i++;
-	}
-	return (0);
-}
-
-int	create_philo(t_philo_param *param)
-{
-	set_philo_param(param);
-	return (set_philo_mutex(param));
-}
 
 int	init_mutex(t_philo_param *param)
 {
@@ -132,38 +74,6 @@ int	get_parameters(t_philo_param *param, int argc, char *argv[])
 	if (param->max_eat == 0)
 		return (ft_putstr_fd("Error: Need a least one meal to run\n", 2), 1);
 	return (0);
-}
-
-int	destroy_mutex_init_error(t_philo_param *param)
-{
-	int	i;
-	int	ret;
-
-	i = 0;
-	ret = 0;
-	while (i < param->number_of_philosophers)
-	{
-		ret = (ret || pthread_mutex_destroy(&(param->forks[i])));
-		i++;
-	}
-	ret = (pthread_mutex_destroy(&(param->mutex_is_dead)) || ret);
-	ret = (pthread_mutex_destroy(&(param->print)) || ret);
-	ret = (pthread_mutex_destroy(&(param->mutex_everyone_ate)) || ret);
-	ret = (pthread_mutex_destroy(&(param->mutex_error)) || ret);
-	if (ret)
-	{
-		ft_putstr_fd("Error at mutex destory\n", 2);
-		return (1);
-	}
-	return (0);
-}
-
-void	clean_init_error(t_philo_param *param)
-{
-	destroy_mutex_init_error(param);
-	free(param->philo_tab);
-	free(param->forks);
-	free(param->threads);
 }
 
 int	init(t_philo_param *param, int argc, char *argv[])

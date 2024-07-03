@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 10:29:03 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/02 16:38:12 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/03 10:55:34 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,19 @@ int		do_think(t_philo *philo);
 t_bool	someone_is_dead(t_philo_param *param);
 int		check_if_someone_died(t_philo_param *param);
 t_bool	do_continue(t_philo *philo);
+
+// CLEAR
+
+int		destroy_mutex_init_error(t_philo_param *param);
+void	clean_init_error(t_philo_param *param);
+int		destroy_mutex(t_philo_param *param);
+int		clean_exit(t_philo_param *param);
+
+// CREATE_PHILO
+
+void	set_philo_param(t_philo_param *param);
+int		set_philo_mutex(t_philo_param *param);
+int		create_philo(t_philo_param *param);
 
 // ERROR
 

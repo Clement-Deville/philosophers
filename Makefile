@@ -11,6 +11,8 @@ DEBUG = -g
 SRCS_FILES =	main	\
 				actions	\
 				check	\
+				clear	\
+				create_philo	\
 				error	\
 				forks	\
 				init	\
