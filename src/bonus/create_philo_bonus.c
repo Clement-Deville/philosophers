@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   create_philo.c                                     :+:      :+:    :+:   */
+/*   create_philo_bonus.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:48:45 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/03 16:32:02 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/09 14:16:06 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,8 @@ void	destroy_philo_sem(t_philo_param *param)
 	i = 0;
 	while (i < param->number_of_philosophers)
 	{
-		if (param->philo_tab[i].sem_ate_enought == SEM_FAILED)
-			return ;
-		sem_close(param->philo_tab[i].sem_ate_enought);
-		if (param->philo_tab[i].sem_last_eat == SEM_FAILED)
-			return ;
-		sem_close(param->philo_tab[i].sem_last_eat);
+		sem_destroy(&(param->philo_tab[i].sem_ate_enought));
+		sem_destroy(&(param->philo_tab[i].sem_last_eat));
 		i++;
 	}
 }
@@ -56,19 +52,29 @@ int	set_philo_sem(t_philo_param *param)
 	i = 0;
 	while (i < param->number_of_philosophers)
 	{
-		param->philo_tab[i].sem_ate_enought = sem_open(NULL, O_CREAT);
-		param->philo_tab[i].sem_last_eat = sem_open(NULL, O_CREAT);
-		if (param->philo_tab[i].sem_ate_enought == SEM_FAILED
-			|| param->philo_tab[i].sem_last_eat == SEM_FAILED)
+		if (sem_init(&(param->philo_tab[i].sem_ate_enought), 0, 1))
 		{
 			ft_putstr_fd("Error at mutex init\n", 2);
-			return (destroy_philo_sem(param), 1);
+			i--;
+			while (i)
+			{
+				sem_destroy(&(param->philo_tab[i].sem_ate_enought));
+				sem_destroy(&(param->philo_tab[i].sem_last_eat));
+				i--;
+			}
+			return (1);
 		}
-		if (sem_init(param->philo_tab[i].sem_ate_enought, 0, 1)
-			|| sem_init(param->philo_tab[i].sem_last_eat, 0, 1))
+		if (sem_init(&(param->philo_tab[i].sem_last_eat), 0, 1))
 		{
 			ft_putstr_fd("Error at mutex init\n", 2);
-			return (destroy_philo_sem(param), 1);
+			sem_destroy(&(param->philo_tab[i].sem_ate_enought));
+			i--;
+			while (i)
+			{
+				sem_destroy(&(param->philo_tab[i].sem_ate_enought));
+				sem_destroy(&(param->philo_tab[i].sem_last_eat));
+				i--;
+			}
 		}
 		(param->philo_tab[i]).ate_enought = FALSE;
 		i++;

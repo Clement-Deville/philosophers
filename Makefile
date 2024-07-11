@@ -24,9 +24,14 @@ SRCS_FILES =	main	\
 				utils	\
 
 SRCS_FILES_BONUS =	main_bonus	\
+					actions_bonus	\
 					clear_bonus	\
 					create_philo_bonus	\
+					forks_bonus	\
+					global_monitoring_bonus	\
+					init_bonus	\
 					is_valid_arg_bonus	\
+					process_bonus	\
 					utils_bonus	\
 
 INCLUDES_FILES = philosophers
