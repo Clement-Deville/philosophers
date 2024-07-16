@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 17:30:32 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/11 17:29:34 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/16 17:33:48 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,9 @@
 # include <sys/time.h>
 # include <stdlib.h>
 # include <stdio.h>
+# include <signal.h>
+# include <sys/wait.h>
+# include <string.h>
 
 # define TRUE 1
 # define FALSE 0
@@ -64,12 +67,13 @@ typedef struct s_philo_param{
 	t_bool			everyone_ate;
 	int				error;
 	sem_t			*forks_count;
-	sem_t			*philo_eating;
+	sem_t			*philo_eating; // Here to prevent deadlock by leating at most half number max of philo eating.
 	sem_t			*sem_is_dead;
-	sem_t			*sem_everyone_ate;
-	sem_t			*sem_error;
+	sem_t			*sem_everyone_ate; // set to 0 then post on it and count each time it is posted
 	sem_t			*sem_print;
-	pthread_t		global_monitor;
+	pthread_t		eat_monitor;
+	pthread_t		dead_monitor;
+	sem_t			*sem_pid_tab;
 }	t_philo_param;
 
 // CLEAR
