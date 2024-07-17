@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:46:14 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/17 14:29:19 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/17 18:08:10 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,13 @@
 
 int	do_die(t_philo *philo)
 {
-	do_print(DEAD, philo);
 	if (sem_post(philo->param->sem_is_dead))
 		return (set_error(philo->param), 1);
+	// if (sem_wait(&(philo->sem_terminate)))
+	// 	return (set_error(philo->param), 1);
+	// philo->terminate = TRUE;
+	usleep(50);
+	do_print(DEAD, philo);
 	return (0);
 }
 
