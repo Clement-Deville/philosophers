@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 16:14:25 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/17 11:25:22 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/17 17:54:48 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,28 @@ int	join_monitoring(t_philo_param *param)
 	return (0);
 }
 
+int	term_childs(t_philo_param *param)
+{
+	int	i;
+
+	i = 0;
+	while (i < 2 * param->number_of_philosophers)
+	{
+		sem_post(param->sem_global_terminate);
+		i++;
+	}
+	return (0);
+	// handle error?
+}
+
 void	*pthread_dead(void *argument)
 {
 	t_philo_param	*param;
 
 	param = (t_philo_param *)argument;
 	sem_wait(param->sem_is_dead);
-	kill_all_childs(param);
+	// kill_all_childs(param);
+	term_childs(param);
 	return (NULL);
 }
 
@@ -43,8 +58,10 @@ void	*pthread_eat(void *argument)
 		sem_wait(param->sem_everyone_ate);
 		count++;
 	}
+	// kill_all_childs(param);
+	term_childs(param);
 	sem_wait(param->sem_print);
-	kill_all_childs(param);
+	usleep(100);
 	printf("Programm stopped cause everyone ate\n");
 	sem_post(param->sem_print);
 	return (NULL);

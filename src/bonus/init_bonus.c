@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 15:23:01 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/17 14:25:13 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/17 17:46:02 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,18 @@
 // 			sem_destroy(&(param->sem_print)), perror("sem_init"), 1);
 // 	return (0);
 // }
+
+int	close_sem_start(void)
+{
+	sem_unlink(S_FORKS);
+	sem_unlink(S_IS_DEAD);
+	sem_unlink(S_EVERY);
+	sem_unlink(S_PRINT);
+	sem_unlink(S_EATING);
+	sem_unlink(S_TAB);
+	sem_unlink(S_GLOBAL);
+	return (0);
+}
 
 int	close_sem(t_philo_param *param)
 {
@@ -71,6 +83,11 @@ int	close_sem(t_philo_param *param)
 	if (sem_close(param->sem_pid_tab) == -1)
 		return (perror("sem_close"), 1);
 	sem_unlink(S_TAB);
+	if (param->sem_global_terminate == SEM_FAILED)
+		return (1);
+	if (sem_close(param->sem_global_terminate) == -1)
+		return (perror("sem_close"), 1);
+	sem_unlink(S_GLOBAL);
 	return (0);
 }
 
@@ -96,11 +113,15 @@ int	open_sem(t_philo_param *param)
 	param->sem_pid_tab = sem_open(S_TAB, O_CREAT, 0644, 1);
 	if (param->sem_pid_tab == SEM_FAILED)
 		return (perror("sem_open"), close_sem(param), 1);
+	param->sem_global_terminate = sem_open(S_GLOBAL, O_CREAT, 0644, 0);
+	if (param->sem_pid_tab == SEM_FAILED)
+		return (perror("sem_open"), close_sem(param), 1);
 	return (0);
 }
 
 int	init_sem(t_philo_param *param)
 {
+	close_sem_start();
 	return (open_sem(param));
 }
 

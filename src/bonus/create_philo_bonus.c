@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:48:45 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/17 14:29:30 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/17 17:52:56 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,15 @@ void	set_philo_param(t_philo_param *param)
 	{
 		(param->philo_tab[0]).philo_number = 1;
 		(param->philo_tab[0]).last_eat = 0;
+		(param->philo_tab[0]).terminate = FALSE;
 		(param->philo_tab[0]).param = param;
-		printf("param adress is %p in set\n", param);
 	}
 	while (i < param->number_of_philosophers)
 	{
 		(param->philo_tab[i]).philo_number = i + 1;
 		(param->philo_tab[i]).last_eat = 0;
+		(param->philo_tab[i]).terminate = FALSE;
 		(param->philo_tab[i]).param = param;
-		printf("param adress is %p in set\n", param);
 		i++;
 	}
 }
@@ -43,6 +43,7 @@ void	destroy_philo_sem(t_philo_param *param)
 	{
 		sem_destroy(&(param->philo_tab[i].sem_ate_enought));
 		sem_destroy(&(param->philo_tab[i].sem_last_eat));
+		sem_destroy(&(param->philo_tab[i].sem_terminate));
 		i++;
 	}
 }
@@ -62,6 +63,7 @@ int	set_philo_sem(t_philo_param *param)
 			{
 				sem_destroy(&(param->philo_tab[i].sem_ate_enought));
 				sem_destroy(&(param->philo_tab[i].sem_last_eat));
+				sem_destroy(&(param->philo_tab[i].sem_terminate));
 				i--;
 			}
 			return (1);
@@ -75,6 +77,21 @@ int	set_philo_sem(t_philo_param *param)
 			{
 				sem_destroy(&(param->philo_tab[i].sem_ate_enought));
 				sem_destroy(&(param->philo_tab[i].sem_last_eat));
+				sem_destroy(&(param->philo_tab[i].sem_terminate));
+				i--;
+			}
+		}
+		if (sem_init(&(param->philo_tab[i].sem_terminate), 1, 1))
+		{
+			ft_putstr_fd("Error at mutex init\n", 2);
+			sem_destroy(&(param->philo_tab[i].sem_ate_enought));
+			sem_destroy(&(param->philo_tab[i].sem_last_eat));
+			i--;
+			while (i)
+			{
+				sem_destroy(&(param->philo_tab[i].sem_ate_enought));
+				sem_destroy(&(param->philo_tab[i].sem_last_eat));
+				sem_destroy(&(param->philo_tab[i].sem_terminate));
 				i--;
 			}
 		}

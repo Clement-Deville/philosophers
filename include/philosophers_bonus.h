@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 17:30:32 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/17 11:53:41 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/17 17:49:28 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@
 # define S_PRINT "/print"
 # define S_EATING "/philo_eating"
 # define S_TAB "/pid_tab"
+# define S_GLOBAL "/global_term"
 
 typedef int	t_bool;
 
@@ -52,6 +53,8 @@ typedef struct s_philo{
 	sem_t					sem_last_eat;
 	t_bool					ate_enought;
 	sem_t					sem_ate_enought;
+	sem_t					sem_terminate;
+	t_bool					terminate;
 	struct s_philo_param	*param;
 }	t_philo;
 
@@ -75,6 +78,7 @@ typedef struct s_philo_param{
 	pthread_t		eat_monitor;
 	pthread_t		dead_monitor;
 	sem_t			*sem_pid_tab;
+	sem_t			*sem_global_terminate;
 }	t_philo_param;
 
 // ACTIONS
@@ -124,6 +128,7 @@ int		do_print(int message_id, t_philo *philo);
 // PROCESS
 
 int		process_multi(t_philo *philo);
+t_bool	do_terminate(t_philo *philo);
 
 // TIME
 
