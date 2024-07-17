@@ -27,12 +27,17 @@ SRCS_FILES_BONUS =	main_bonus	\
 					actions_bonus	\
 					clear_bonus	\
 					create_philo_bonus	\
+					do_continue_bonus	\
+					errors_bonus	\
 					forks_bonus	\
 					global_monitoring_bonus	\
 					init_bonus	\
 					is_valid_arg_bonus	\
+					print_bonus	\
 					process_bonus	\
+					time_bonus	\
 					utils_bonus	\
+					wait_bonus	\
 
 INCLUDES_FILES = philosophers
 

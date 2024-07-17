@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 17:30:32 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/16 17:33:48 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/17 11:53:41 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,15 +42,16 @@
 # define S_ERR "/error"
 # define S_PRINT "/print"
 # define S_EATING "/philo_eating"
+# define S_TAB "/pid_tab"
 
 typedef int	t_bool;
 
 typedef struct s_philo{
 	long					philo_number;
 	long					last_eat;
-	sem_t					*sem_last_eat;
+	sem_t					sem_last_eat;
 	t_bool					ate_enought;
-	sem_t					*sem_ate_enought;
+	sem_t					sem_ate_enought;
 	struct s_philo_param	*param;
 }	t_philo;
 
@@ -76,6 +77,13 @@ typedef struct s_philo_param{
 	sem_t			*sem_pid_tab;
 }	t_philo_param;
 
+// ACTIONS
+
+int		do_die(t_philo *philo);
+int		do_eat(t_philo *philo);
+int		do_sleep(t_philo *philo);
+int		do_think(t_philo *philo);
+
 // CLEAR
 
 void	clean_init_error(t_philo_param *param);
@@ -83,6 +91,18 @@ void	clean_init_error(t_philo_param *param);
 // CREATE_PHILO
 
 int		create_philo(t_philo_param *param);
+
+// DO_CONTINUE
+
+int		do_continue(t_philo *philo);
+
+// ERRORS
+
+void	set_error(t_philo_param *param);
+
+// FORKS
+
+int		take_forks(t_philo *philo);
 
 // INIT
 
@@ -95,14 +115,29 @@ t_bool	is_valid_parameters(int argc, char *argv[]);
 // GLOBAL_MONITORING
 
 int		init_global_monitoring(t_philo_param *param);
+int		join_monitoring(t_philo_param *param);
+
+// PRINT
+
+int		do_print(int message_id, t_philo *philo);
 
 // PROCESS
 
-int		process_handler(t_philo *philo);
+int		process_multi(t_philo *philo);
+
+// TIME
+
+long	time_passed(const struct timeval start);
+long	get_time(void);
 
 // UTILS
 
 void	ft_putstr_fd(char *s, int fd);
 int		ft_atoi(const char *nptr);
+
+// WAIT
+
+int		kill_all_childs(t_philo_param *param);
+int		wait_for_all(t_philo_param *param);
 
 #endif

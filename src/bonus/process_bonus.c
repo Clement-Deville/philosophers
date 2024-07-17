@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:44:10 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/11 17:13:50 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/17 11:56:30 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,7 @@
 
 int	set_one_ate_enought(t_philo *philo)
 {
-	if (sem_wait(&(philo->sem_ate_enought)))
-		return (set_error(philo->param), 1);
-	philo->ate_enought = TRUE;
-	if (sem_post(&(philo->sem_ate_enought)))
+	if (sem_post(philo->param->sem_everyone_ate))
 		return (set_error(philo->param), 1);
 	return (0);
 }
@@ -33,9 +30,15 @@ t_bool	check_if_philo_died(t_philo *philo)
 		return (set_error(philo->param), FALSE);
 	if (timer >= philo->param->time_to_die)
 	{
-		do_die(&(philo));
+		do_die(philo);
 		return (TRUE);
 	}
+	return (FALSE);
+}
+
+int	found_error(t_philo *philo)
+{
+	(void)philo;
 	return (FALSE);
 }
 
@@ -80,11 +83,8 @@ int	process_multi(t_philo *philo)
 	if (pthread_create(&actions, NULL, pthread_actions, philo))
 		return (1);
 	// print some error
-	error = check_stop_conditions(&philo);
+	error = check_stop_conditions(philo);
 	if (pthread_join(actions, NULL))
 		return (perror("pthread_join"), 1);
+	return (error);
 }
-
-int	wait_for_all();
-
-int	wait_valids();

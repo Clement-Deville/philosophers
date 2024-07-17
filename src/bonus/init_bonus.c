@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 15:23:01 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/11 15:54:09 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/17 14:25:13 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,31 +46,31 @@ int	close_sem(t_philo_param *param)
 	if (sem_close(param->forks_count) == -1)
 		return (perror("sem_close"), 1);
 	sem_unlink(S_FORKS);
-	if (param->sem_is_dead == S_IS_DEAD)
+	if (param->sem_is_dead == SEM_FAILED)
 		return (1);
 	if (sem_close(param->sem_is_dead) == -1)
 		return (perror("sem_close"), 1);
 	sem_unlink(S_IS_DEAD);
-	if (param->sem_everyone_ate == S_EVERY)
+	if (param->sem_everyone_ate == SEM_FAILED)
 		return (1);
 	if (sem_close(param->sem_everyone_ate) == -1)
 		return (perror("sem_close"), 1);
 	sem_unlink(S_EVERY);
-	if (param->sem_error == S_ERR)
-		return (1);
-	if (sem_close(param->sem_error) == -1)
-		return (perror("sem_close"), 1);
-	sem_unlink(S_ERR);
-	if (param->sem_print == S_PRINT)
+	if (param->sem_print == SEM_FAILED)
 		return (1);
 	if (sem_close(param->sem_print) == -1)
 		return (perror("sem_close"), 1);
 	sem_unlink(S_PRINT);
-	if (param->philo_eating == S_EATING)
+	if (param->philo_eating == SEM_FAILED)
 		return (1);
 	if (sem_close(param->philo_eating) == -1)
 		return (perror("sem_close"), 1);
 	sem_unlink(S_EATING);
+	if (param->sem_pid_tab == SEM_FAILED)
+		return (1);
+	if (sem_close(param->sem_pid_tab) == -1)
+		return (perror("sem_close"), 1);
+	sem_unlink(S_TAB);
 	return (0);
 }
 
@@ -80,14 +80,11 @@ int	open_sem(t_philo_param *param)
 			param->number_of_philosophers);
 	if (param->forks_count == SEM_FAILED)
 		return (perror("sem_open"), close_sem(param), 1);
-	param->sem_is_dead = sem_open(S_IS_DEAD, O_CREAT, 0644, 1);
+	param->sem_is_dead = sem_open(S_IS_DEAD, O_CREAT, 0644, 0);
 	if (param->sem_is_dead == SEM_FAILED)
 		return (perror("sem_open"), close_sem(param), 1);
-	param->sem_everyone_ate = sem_open(S_EVERY, O_CREAT, 0644, 1);
+	param->sem_everyone_ate = sem_open(S_EVERY, O_CREAT, 0644, 0);
 	if (param->sem_everyone_ate == SEM_FAILED)
-		return (perror("sem_open"), close_sem(param), 1);
-	param->sem_error = sem_open(S_ERR, O_CREAT, 0644, 1);
-	if (param->sem_error == SEM_FAILED)
 		return (perror("sem_open"), close_sem(param), 1);
 	param->sem_print = sem_open(S_PRINT, O_CREAT, 0644, 1);
 	if (param->sem_print == SEM_FAILED)
@@ -95,6 +92,9 @@ int	open_sem(t_philo_param *param)
 	param->philo_eating = sem_open(S_EATING, O_CREAT, 0644,
 			param->number_of_philosophers / 2);
 	if (param->philo_eating == SEM_FAILED)
+		return (perror("sem_open"), close_sem(param), 1);
+	param->sem_pid_tab = sem_open(S_TAB, O_CREAT, 0644, 1);
+	if (param->sem_pid_tab == SEM_FAILED)
 		return (perror("sem_open"), close_sem(param), 1);
 	return (0);
 }
@@ -111,7 +111,7 @@ int	allocate(t_philo_param *param)
 	if (param->pid_tab == NULL || init_sem(param) == 1)
 		return (ft_putstr_fd("Erreur de malloc\n", 2), 1);
 	param->philo_tab = (t_philo *)malloc(sizeof(t_philo)
-			* (param->number_of_philosophers));
+			* (int)(param->number_of_philosophers));
 	if (param->philo_tab == NULL)
 		return (free(param->pid_tab),
 			ft_putstr_fd("Erreur de malloc\n", 2), 1);

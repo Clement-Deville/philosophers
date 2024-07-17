@@ -6,11 +6,17 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 17:31:34 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/16 18:13:47 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/17 14:30:36 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <philosophers_bonus.h>
+
+int	clean_exit(t_philo_param *param)
+{
+	(void)param;
+	return (0);
+}
 
 int	execute_one(t_philo_param *param)
 {
@@ -38,9 +44,11 @@ int	execute_multi(t_philo_param *param)
 		}
 		if (param->pid_tab[i] == 0)
 			exit (process_multi(&(param->philo_tab[i])));
+		// printf("Process multi called for i = %ld\n", i);
+		// a retirer
 		i++;
 	}
-	sem_post(param->pid_tab);
+	sem_post(param->sem_pid_tab);
 	if (wait_for_all(param) || join_monitoring(param))
 		return (1);
 	return (0);
@@ -50,6 +58,8 @@ int	main(int argc, char *argv[])
 {
 	t_philo_param	param;
 
+	// a retirer
+	// printf("param adress is %p in main\n", &param);
 	if (init(&param, argc, argv))
 		return (1);
 	if (param.number_of_philosophers == 1)

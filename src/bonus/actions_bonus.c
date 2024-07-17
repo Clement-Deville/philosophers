@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:46:14 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/09 15:40:07 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/17 14:29:19 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,8 @@
 
 int	do_die(t_philo *philo)
 {
-	if (sem_wait(&(philo->param->sem_is_dead)))
-		return (set_error(philo->param), 1);
-	if (philo->param->is_dead == TRUE)
-	{
-		if (sem_post(&(philo->param->sem_is_dead)))
-			return (set_error(philo->param), 1);
-		return (0);
-	}
-	philo->param->is_dead = TRUE;
-	usleep(50);
 	do_print(DEAD, philo);
-	if (sem_post(&(philo->param->sem_is_dead)))
+	if (sem_post(philo->param->sem_is_dead))
 		return (set_error(philo->param), 1);
 	return (0);
 }
@@ -33,13 +23,15 @@ int	do_die(t_philo *philo)
 int	do_eat(t_philo *philo)
 {
 	//verif error
+	// printf("do_eat called by %ld\n", philo->philo_number);
+	// // a retirer
 	if (do_continue(philo) == FALSE)
 	{
-		if (sem_post(&(philo->param->forks_count)))
+		if (sem_post(philo->param->forks_count))
 			return (set_error(philo->param), 1);
-		if (sem_post(&(philo->param->forks_count)))
+		if (sem_post(philo->param->forks_count))
 			return (set_error(philo->param), 1);
-		if (sem_post(&(philo->param->philo_eating)))
+		if (sem_post(philo->param->philo_eating))
 			return (set_error(philo->param), 1);
 		return (0);
 	}
@@ -56,9 +48,9 @@ int	do_eat(t_philo *philo)
 	philo->last_eat = time_passed(philo->param->clock);
 	if (sem_post(&(philo->sem_last_eat)))
 		return (set_error(philo->param), 1);
-	if (sem_post(&(philo->param->forks_count))
-		|| sem_post(&(philo->param->forks_count))
-		|| sem_post(&(philo->param->philo_eating)))
+	if (sem_post(philo->param->forks_count)
+		|| sem_post(philo->param->forks_count)
+		|| sem_post(philo->param->philo_eating))
 		return (set_error(philo->param), 1);
 	return (0);
 }

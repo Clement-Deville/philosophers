@@ -1,20 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   clear_bonus.c                                      :+:      :+:    :+:   */
+/*   do_continue.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/03 10:51:23 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/17 11:20:02 by cdeville         ###   ########.fr       */
+/*   Created: 2024/07/17 10:40:27 by cdeville          #+#    #+#             */
+/*   Updated: 2024/07/17 10:41:06 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <philosophers_bonus.h>
 
-void	clean_init_error(t_philo_param *param)
+int	do_continue(t_philo *philo)
 {
-	// destroy_error(param);
-	free(param->pid_tab);
-	free(param->philo_tab);
+	(void)philo;
+	return (TRUE);
 }

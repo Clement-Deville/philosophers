@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 16:14:25 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/16 18:25:31 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/17 11:25:22 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ int	join_monitoring(t_philo_param *param)
 	// UNLOCKING THE SEM_WAIT
 	pthread_join(param->dead_monitor, NULL);
 	pthread_join(param->eat_monitor, NULL);
+	return (0);
 }
 
 void	*pthread_dead(void *argument)
@@ -56,4 +57,5 @@ int	init_global_monitoring(t_philo_param *param)
 		|| pthread_create(&(param->dead_monitor),
 			NULL, pthread_dead, param))
 		return (perror("pthread"), 1);
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:47:39 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/16 18:07:24 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/17 11:31:34 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	wait_for_all(t_philo_param *param)
 	i = 0;
 	while (i < param->number_of_philosophers)
 	{
-		if (waitpid(0, &status, NULL) == -1)
+		if (waitpid(0, &status, 0) == -1)
 			return (perror(""), 1);
 		status = check_status(status);
 		if (status)
