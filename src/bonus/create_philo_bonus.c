@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:48:45 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/17 17:52:56 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/18 14:39:58 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,20 +30,6 @@ void	set_philo_param(t_philo_param *param)
 		(param->philo_tab[i]).last_eat = 0;
 		(param->philo_tab[i]).terminate = FALSE;
 		(param->philo_tab[i]).param = param;
-		i++;
-	}
-}
-
-void	destroy_philo_sem(t_philo_param *param)
-{
-	int	i;
-
-	i = 0;
-	while (i < param->number_of_philosophers)
-	{
-		sem_destroy(&(param->philo_tab[i].sem_ate_enought));
-		sem_destroy(&(param->philo_tab[i].sem_last_eat));
-		sem_destroy(&(param->philo_tab[i].sem_terminate));
 		i++;
 	}
 }

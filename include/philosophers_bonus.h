@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 17:30:32 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/17 17:49:28 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/18 14:55:33 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@
 # define S_EATING "/philo_eating"
 # define S_TAB "/pid_tab"
 # define S_GLOBAL "/global_term"
+# define S_CAN_DIE "/can_die"
 
 typedef int	t_bool;
 
@@ -67,7 +68,8 @@ typedef struct s_philo_param{
 	struct timeval	clock;
 	int				*pid_tab;
 	t_philo			*philo_tab;
-	t_bool			is_dead;
+	t_bool			stop;
+	sem_t			sem_stop;
 	t_bool			everyone_ate;
 	int				error;
 	sem_t			*forks_count;
@@ -79,6 +81,7 @@ typedef struct s_philo_param{
 	pthread_t		dead_monitor;
 	sem_t			*sem_pid_tab;
 	sem_t			*sem_global_terminate;
+	sem_t			*sem_can_die;
 }	t_philo_param;
 
 // ACTIONS
@@ -91,6 +94,9 @@ int		do_think(t_philo *philo);
 // CLEAR
 
 void	clean_init_error(t_philo_param *param);
+int		clean_exit(t_philo_param *param);
+int		clean_exit_child(t_philo_param *param);
+void	destroy_philo_sem(t_philo_param *param);
 
 // CREATE_PHILO
 
@@ -111,6 +117,8 @@ int		take_forks(t_philo *philo);
 // INIT
 
 int		init(t_philo_param *param, int argc, char *argv[]);
+int		close_sem(t_philo_param *param);
+int		unlink_sem(void);
 
 // IS_VALID_ARG
 

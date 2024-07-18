@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:44:10 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/17 17:57:52 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/18 14:51:44 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 int	set_one_ate_enought(t_philo *philo)
 {
+	if (do_continue(philo) == FALSE)
+		return (0);
 	if (sem_post(philo->param->sem_everyone_ate))
 		return (set_error(philo->param), 1);
 	return (0);
@@ -118,5 +120,6 @@ int	process_multi(t_philo *philo)
 	error = check_stop_conditions(philo);
 	if (pthread_join(actions, NULL) || pthread_join(term_monitor, NULL))
 		return (perror("pthread_join"), 1);
+	clean_exit_child(philo->param);
 	return (error);
 }

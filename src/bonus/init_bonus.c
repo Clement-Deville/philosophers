@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 15:23:01 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/17 17:46:02 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/18 14:56:36 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@
 // 	return (0);
 // }
 
-int	close_sem_start(void)
+int	unlink_sem(void)
 {
 	sem_unlink(S_FORKS);
 	sem_unlink(S_IS_DEAD);
@@ -57,42 +57,48 @@ int	close_sem(t_philo_param *param)
 		return (1);
 	if (sem_close(param->forks_count) == -1)
 		return (perror("sem_close"), 1);
-	sem_unlink(S_FORKS);
+	// sem_unlink(S_FORKS);
 	if (param->sem_is_dead == SEM_FAILED)
 		return (1);
 	if (sem_close(param->sem_is_dead) == -1)
 		return (perror("sem_close"), 1);
-	sem_unlink(S_IS_DEAD);
+	// sem_unlink(S_IS_DEAD);
 	if (param->sem_everyone_ate == SEM_FAILED)
 		return (1);
 	if (sem_close(param->sem_everyone_ate) == -1)
 		return (perror("sem_close"), 1);
-	sem_unlink(S_EVERY);
+	// sem_unlink(S_EVERY);
 	if (param->sem_print == SEM_FAILED)
 		return (1);
 	if (sem_close(param->sem_print) == -1)
 		return (perror("sem_close"), 1);
-	sem_unlink(S_PRINT);
+	// sem_unlink(S_PRINT);
 	if (param->philo_eating == SEM_FAILED)
 		return (1);
 	if (sem_close(param->philo_eating) == -1)
 		return (perror("sem_close"), 1);
-	sem_unlink(S_EATING);
+	// sem_unlink(S_EATING);
 	if (param->sem_pid_tab == SEM_FAILED)
 		return (1);
 	if (sem_close(param->sem_pid_tab) == -1)
 		return (perror("sem_close"), 1);
-	sem_unlink(S_TAB);
+	// sem_unlink(S_TAB);
 	if (param->sem_global_terminate == SEM_FAILED)
 		return (1);
 	if (sem_close(param->sem_global_terminate) == -1)
 		return (perror("sem_close"), 1);
-	sem_unlink(S_GLOBAL);
+	// sem_unlink(S_GLOBAL);
 	return (0);
 }
 
 int	open_sem(t_philo_param *param)
 {
+	if (sem_init(&(param->sem_stop), 1, 1))
+		return (perror("sem_init"), 1);
+	// param->sem_can_die = sem_open(S_CAN_DIE, O_CREAT, 0644, 1);
+	// if (param->sem_can_die == SEM_FAILED)
+	// 	return (perror("sem_open"), close_sem(param), 1);
+	// need to change to sem init and protect
 	param->forks_count = sem_open(S_FORKS, O_CREAT, 0644,
 			param->number_of_philosophers);
 	if (param->forks_count == SEM_FAILED)
@@ -121,7 +127,7 @@ int	open_sem(t_philo_param *param)
 
 int	init_sem(t_philo_param *param)
 {
-	close_sem_start();
+	unlink_sem();
 	return (open_sem(param));
 }
 
@@ -166,7 +172,7 @@ int	init(t_philo_param *param, int argc, char *argv[])
 		return (1);
 	if (allocate(param))
 		return (1);
-	param->is_dead = FALSE;
+	param->stop = FALSE;
 	gettimeofday(&(param->clock), NULL);
 	if (create_philo(param))
 		return (1);

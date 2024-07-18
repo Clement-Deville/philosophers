@@ -6,21 +6,16 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 17:31:34 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/17 14:30:36 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/18 14:51:10 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <philosophers_bonus.h>
 
-int	clean_exit(t_philo_param *param)
-{
-	(void)param;
-	return (0);
-}
-
 int	execute_one(t_philo_param *param)
 {
 	(void)param;
+	clean_exit(param);
 	return (0);
 }
 
@@ -50,8 +45,8 @@ int	execute_multi(t_philo_param *param)
 	}
 	sem_post(param->sem_pid_tab);
 	if (wait_for_all(param) || join_monitoring(param))
-		return (1);
-	return (0);
+		return (clean_exit(param), 1);
+	return (clean_exit(param), 0);
 }
 
 int	main(int argc, char *argv[])

@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 16:14:25 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/17 17:54:48 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/18 12:58:10 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,10 @@ int	join_monitoring(t_philo_param *param)
 {
 	sem_post(param->sem_is_dead);
 	// UNLOCKING THE SEM_WAIT
+	sem_wait(&(param->sem_stop));
+	param->stop = TRUE;
+	sem_post(&(param->sem_stop));
+	sem_post(param->sem_everyone_ate);
 	pthread_join(param->dead_monitor, NULL);
 	pthread_join(param->eat_monitor, NULL);
 	return (0);
@@ -53,10 +57,15 @@ void	*pthread_eat(void *argument)
 
 	param = (t_philo_param *)argument;
 	count = 0;
+	// need to stop if one die
 	while (count != param->number_of_philosophers)
 	{
 		sem_wait(param->sem_everyone_ate);
 		count++;
+		sem_wait(&(param->sem_stop));
+		if (param->stop)
+			return (sem_post(&(param->sem_stop)), NULL);
+		sem_post(&(param->sem_stop));
 	}
 	// kill_all_childs(param);
 	term_childs(param);

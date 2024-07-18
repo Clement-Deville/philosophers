@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 15:43:01 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/17 18:03:02 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/18 14:03:44 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,14 @@ int	do_print(int message_id, t_philo *philo)
 	// a retirer
 	if (sem_wait(philo->param->sem_print))
 		return (set_error(philo->param), 1);
+	if (!do_continue(philo))
+		return (sem_post(philo->param->sem_print), 0);
 	if (message_id == DEAD)
+	{
 		printf("%ld %ld is dead\n",
 				time_passed(philo->param->clock), philo->philo_number);
+		usleep(5000 + (100 *philo->param->number_of_philosophers));
+	}
 	else if (message_id == FORK)
 		printf("%ld %ld has taken a fork\n",
 			time_passed(philo->param->clock), philo->philo_number);

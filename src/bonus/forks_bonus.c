@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 15:02:34 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/17 14:30:07 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/18 13:04:14 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,10 @@ int	take_forks(t_philo *philo)
 	// //
 	// printf("fork_count\n");
 	// //
+	if (do_continue(philo) == FALSE)
+		return (sem_post(param->philo_eating),
+			sem_post(param->forks_count),
+			sem_post(param->forks_count), 0);
 	if (do_print(FORK, philo) || do_print(FORK, philo))
 		return (sem_post(param->philo_eating),
 			sem_post(param->forks_count),
