@@ -6,18 +6,11 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:51:23 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/18 14:56:06 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/18 17:43:28 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <philosophers_bonus.h>
-
-void	clean_init_error(t_philo_param *param)
-{
-	// destroy_error(param);
-	free(param->pid_tab);
-	free(param->philo_tab);
-}
 
 void	destroy_philo_sem(t_philo_param *param)
 {

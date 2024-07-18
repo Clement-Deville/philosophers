@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:47:39 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/17 11:31:34 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/18 18:19:30 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,13 +52,13 @@ void	print_error(int status)
 	}
 }
 
-int	wait_for_all(t_philo_param *param)
+int	wait_for_all(t_philo_param *param, int count)
 {
 	int	i;
 	int	status;
 
 	i = 0;
-	while (i < param->number_of_philosophers)
+	while (i < count)
 	{
 		if (waitpid(0, &status, 0) == -1)
 			return (perror(""), 1);
@@ -71,6 +71,7 @@ int	wait_for_all(t_philo_param *param)
 			sem_post(param->sem_print);
 		}
 		i++;
+	// need to be changed to match new sem_error
 	}
 	return (0);
 }

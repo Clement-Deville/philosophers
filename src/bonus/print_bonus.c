@@ -6,28 +6,21 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 15:43:01 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/18 14:03:44 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/18 17:37:35 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <philosophers_bonus.h>
 
-int	do_print(int message_id, t_philo *philo)
+void	print_msg(int message_id, t_philo *philo)
 {
-	// if (philo->param->sem_print == NULL)
-	// 	printf("In do_print: philo->param->sem_print is null\n");
-	// if (philo->param == NULL)
-	// 	printf("In do_print: philo->param is null\n");
-	// a retirer
-	if (sem_wait(philo->param->sem_print))
-		return (set_error(philo->param), 1);
 	if (!do_continue(philo))
-		return (sem_post(philo->param->sem_print), 0);
+		return ;
 	if (message_id == DEAD)
 	{
 		printf("%ld %ld is dead\n",
-				time_passed(philo->param->clock), philo->philo_number);
-		usleep(5000 + (100 *philo->param->number_of_philosophers));
+			time_passed(philo->param->clock), philo->philo_number);
+		usleep(5000 + (100 * philo->param->number_of_philosophers));
 	}
 	else if (message_id == FORK)
 		printf("%ld %ld has taken a fork\n",
@@ -45,7 +38,11 @@ int	do_print(int message_id, t_philo *philo)
 		printf("Programm stopped cause everyone ate\n");
 	else if (message_id == CRITIC_ERROR)
 		ft_putstr_fd("\n\nCRITICAL ERROR OCCURED!\n\n", 2);
-	if (sem_post(philo->param->sem_print))
-		return (set_error(philo->param), 1);
-	return (0);
+}
+
+void	do_print(int message_id, t_philo *philo)
+{
+	sem_wait(philo->param->sem_print);
+	print_msg(message_id, philo);
+	sem_post(philo->param->sem_print);
 }

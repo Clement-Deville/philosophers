@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:48:45 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/18 14:39:58 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/18 17:48:36 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,17 @@ void	set_philo_param(t_philo_param *param)
 	}
 }
 
+void	destroy_philo_sem_error(t_philo_param *param, int i)
+{
+	while (i)
+	{
+		sem_destroy(&(param->philo_tab[i].sem_ate_enought));
+		sem_destroy(&(param->philo_tab[i].sem_last_eat));
+		sem_destroy(&(param->philo_tab[i].sem_terminate));
+		i--;
+	}
+}
+
 int	set_philo_sem(t_philo_param *param)
 {
 	int	i;
@@ -42,44 +53,20 @@ int	set_philo_sem(t_philo_param *param)
 	while (i < param->number_of_philosophers)
 	{
 		if (sem_init(&(param->philo_tab[i].sem_ate_enought), 1, 1))
-		{
-			ft_putstr_fd("Error at mutex init\n", 2);
-			i--;
-			while (i)
-			{
-				sem_destroy(&(param->philo_tab[i].sem_ate_enought));
-				sem_destroy(&(param->philo_tab[i].sem_last_eat));
-				sem_destroy(&(param->philo_tab[i].sem_terminate));
-				i--;
-			}
-			return (1);
-		}
+			return (perror("Error at mutex init"),
+				destroy_philo_sem_error(param, --i), 1);
 		if (sem_init(&(param->philo_tab[i].sem_last_eat), 1, 1))
 		{
-			ft_putstr_fd("Error at mutex init\n", 2);
 			sem_destroy(&(param->philo_tab[i].sem_ate_enought));
-			i--;
-			while (i)
-			{
-				sem_destroy(&(param->philo_tab[i].sem_ate_enought));
-				sem_destroy(&(param->philo_tab[i].sem_last_eat));
-				sem_destroy(&(param->philo_tab[i].sem_terminate));
-				i--;
-			}
+			return (perror("Error at mutex init"),
+				destroy_philo_sem_error(param, --i), 1);
 		}
 		if (sem_init(&(param->philo_tab[i].sem_terminate), 1, 1))
 		{
-			ft_putstr_fd("Error at mutex init\n", 2);
 			sem_destroy(&(param->philo_tab[i].sem_ate_enought));
 			sem_destroy(&(param->philo_tab[i].sem_last_eat));
-			i--;
-			while (i)
-			{
-				sem_destroy(&(param->philo_tab[i].sem_ate_enought));
-				sem_destroy(&(param->philo_tab[i].sem_last_eat));
-				sem_destroy(&(param->philo_tab[i].sem_terminate));
-				i--;
-			}
+			return (perror("Error at mutex init"),
+				destroy_philo_sem_error(param, --i), 1);
 		}
 		(param->philo_tab[i]).ate_enought = FALSE;
 		i++;
@@ -90,13 +77,5 @@ int	set_philo_sem(t_philo_param *param)
 int	create_philo(t_philo_param *param)
 {
 	set_philo_param(param);
-	// int	i;
-	// i = 0;
-	// while (i < param->number_of_philosophers)
-	// {
-	// 	printf("Philo number %ld, Philo param %p\n", param->philo_tab[i].philo_number, (param->philo_tab[i]).param);
-	// 	// a retirer
-	// 	i++;
-	// }
 	return (set_philo_sem(param));
 }

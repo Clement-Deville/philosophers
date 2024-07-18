@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 17:30:32 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/18 14:55:33 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/18 18:20:27 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,42 @@
 
 typedef int	t_bool;
 
+// typedef struct s_philo{
+// 	long					philo_number;
+// 	long					last_eat;
+// 	sem_t					sem_last_eat;
+// 	t_bool					ate_enought;
+// 	sem_t					sem_ate_enought;
+// 	sem_t					sem_terminate;
+// 	t_bool					terminate;
+// 	struct s_philo_param	*param;
+// }	t_philo;
+
+// typedef struct s_philo_param{
+// 	long			number_of_philosophers;
+// 	long			time_to_die;
+// 	long			time_to_eat;
+// 	long			time_to_sleep;
+// 	long			max_eat;
+// 	struct timeval	clock;
+// 	int				*pid_tab;
+// 	t_philo			*philo_tab;
+// 	t_bool			stop;
+// 	sem_t			sem_stop;
+// 	t_bool			everyone_ate;
+// 	int				error;
+// 	sem_t			*forks_count;
+// 	sem_t			*philo_eating; // Here to prevent deadlock by leating at most half number max of philo eating.
+// 	sem_t			*sem_is_dead;
+// 	sem_t			*sem_everyone_ate; // set to 0 then post on it and count each time it is posted
+// 	sem_t			*sem_print;
+// 	pthread_t		eat_monitor;
+// 	pthread_t		dead_monitor;
+// 	sem_t			*sem_pid_tab;
+// 	sem_t			*sem_global_terminate;
+// 	sem_t			*sem_can_die;
+// }	t_philo_param;
+
 typedef struct s_philo{
 	long					philo_number;
 	long					last_eat;
@@ -55,6 +91,8 @@ typedef struct s_philo{
 	t_bool					ate_enought;
 	sem_t					sem_ate_enought;
 	sem_t					sem_terminate;
+	sem_t					sem_error;
+	t_bool					error;
 	t_bool					terminate;
 	struct s_philo_param	*param;
 }	t_philo;
@@ -73,16 +111,19 @@ typedef struct s_philo_param{
 	t_bool			everyone_ate;
 	int				error;
 	sem_t			*forks_count;
-	sem_t			*philo_eating; // Here to prevent deadlock by leating at most half number max of philo eating.
+	sem_t			*philo_eating;
 	sem_t			*sem_is_dead;
-	sem_t			*sem_everyone_ate; // set to 0 then post on it and count each time it is posted
+	sem_t			*sem_everyone_ate;
 	sem_t			*sem_print;
 	pthread_t		eat_monitor;
 	pthread_t		dead_monitor;
+	pthread_t		error_monitor;
 	sem_t			*sem_pid_tab;
 	sem_t			*sem_global_terminate;
 	sem_t			*sem_can_die;
+	sem_t			*sem_error;
 }	t_philo_param;
+
 
 // ACTIONS
 
@@ -117,7 +158,7 @@ int		take_forks(t_philo *philo);
 // INIT
 
 int		init(t_philo_param *param, int argc, char *argv[]);
-int		close_sem(t_philo_param *param);
+void	close_sem(t_philo_param *param);
 int		unlink_sem(void);
 
 // IS_VALID_ARG
@@ -131,7 +172,7 @@ int		join_monitoring(t_philo_param *param);
 
 // PRINT
 
-int		do_print(int message_id, t_philo *philo);
+void	do_print(int message_id, t_philo *philo);
 
 // PROCESS
 
@@ -151,6 +192,6 @@ int		ft_atoi(const char *nptr);
 // WAIT
 
 int		kill_all_childs(t_philo_param *param);
-int		wait_for_all(t_philo_param *param);
+int		wait_for_all(t_philo_param *param, int count);
 
 #endif

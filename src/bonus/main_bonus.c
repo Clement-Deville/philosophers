@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 17:31:34 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/18 14:51:10 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/18 18:23:10 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,19 +32,18 @@ int	execute_multi(t_philo_param *param)
 		if (param->pid_tab[i] == -1)
 		{
 			perror("Fork");
-			// error handling
 			set_error(param);
-			// need to join monitoring, kill valids and wait valids.
+			wait_for_all(param, i);
+			join_monitoring(param);
 			return (clean_exit(param));
 		}
 		if (param->pid_tab[i] == 0)
 			exit (process_multi(&(param->philo_tab[i])));
-		// printf("Process multi called for i = %ld\n", i);
-		// a retirer
 		i++;
 	}
 	sem_post(param->sem_pid_tab);
-	if (wait_for_all(param) || join_monitoring(param))
+	if (wait_for_all(param, param->number_of_philosophers)
+		|| join_monitoring(param))
 		return (clean_exit(param), 1);
 	return (clean_exit(param), 0);
 }
@@ -53,20 +52,12 @@ int	main(int argc, char *argv[])
 {
 	t_philo_param	param;
 
-	// a retirer
-	// printf("param adress is %p in main\n", &param);
 	if (init(&param, argc, argv))
 		return (1);
 	if (param.number_of_philosophers == 1)
-	{
-		if (execute_one(&param))
-			return (1);
-	}
+		return (execute_one(&param));
 	else
-	{
-		if (execute_multi(&param))
-			return (1);
-	}
+		return (execute_multi(&param));
 }
 
 
