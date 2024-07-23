@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 12:09:20 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/02 12:11:34 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/23 15:35:40 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	do_print(int message_id, t_philo *philo)
 	if (pthread_mutex_lock(&(philo->param->print)))
 		return (set_error(philo->param), 1);
 	if (message_id == DEAD)
-		printf("%ld %ld is dead\n",
+		printf("%ld %ld died\n",
 			time_passed(philo->param->clock), philo->philo_number);
 	else if (message_id == FORK)
 		printf("%ld %ld has taken a fork\n",

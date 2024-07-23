@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:47:39 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/18 18:19:30 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/23 14:58:16 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,12 @@ void	print_error(int status)
 	if (status < 0)
 	{
 		printf("CRITICAL ERROR: a child has been stopped cause of signal %s\n",
-			strsignal(-status));
+		strsignal(WIFSIGNALED(status)));
 		return ;
 	}
 	else
 	{
-		printf("CRITICAL ERROR: a child has been encouter an error: %s\n",
-			strerror(status));
+		printf("CRITICAL ERROR: a child has been encouter an error\n");
 		return ;
 	}
 }
@@ -56,8 +55,10 @@ int	wait_for_all(t_philo_param *param, int count)
 {
 	int	i;
 	int	status;
+	int	saved_status;
 
 	i = 0;
+	saved_status = 0;
 	while (i < count)
 	{
 		if (waitpid(0, &status, 0) == -1)
@@ -65,13 +66,12 @@ int	wait_for_all(t_philo_param *param, int count)
 		status = check_status(status);
 		if (status)
 		{
+			saved_status = status;
 			sem_wait(param->sem_print);
-			kill_all_childs(param);
 			print_error(status);
 			sem_post(param->sem_print);
 		}
 		i++;
-	// need to be changed to match new sem_error
 	}
-	return (0);
+	return (saved_status);
 }

@@ -35,6 +35,8 @@ SRCS_FILES_BONUS =	main_bonus	\
 					is_valid_arg_bonus	\
 					print_bonus	\
 					process_bonus	\
+					pthreads_bonus	\
+					sem_utils	\
 					time_bonus	\
 					utils_bonus	\
 					wait_bonus	\

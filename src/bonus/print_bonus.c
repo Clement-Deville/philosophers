@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 15:43:01 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/18 17:37:35 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/23 15:35:25 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	print_msg(int message_id, t_philo *philo)
 		return ;
 	if (message_id == DEAD)
 	{
-		printf("%ld %ld is dead\n",
+		printf("%ld %ld died\n",
 			time_passed(philo->param->clock), philo->philo_number);
 		usleep(5000 + (100 * philo->param->number_of_philosophers));
 	}

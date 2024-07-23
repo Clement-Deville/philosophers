@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:44:10 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/18 18:13:24 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/23 16:45:05 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,57 +51,42 @@ int	check_stop_conditions(t_philo *philo)
 			return (0);
 		if (do_terminate(philo))
 			return (0);
-		usleep(50);
+		usleep(5000);
+		// old value == 50
 	}
-}
-
-void	*pthread_actions(void *argument)
-{
-	int		count;
-	t_philo	*philo;
-
-	philo = (t_philo *)argument;
-	count = 0;
-	while (do_continue(philo) == TRUE)
-	{
-		if (take_forks(philo))
-			return (set_error(philo->param), NULL);
-		do_eat(philo);
-		do_sleep(philo);
-		do_think(philo);
-		count++;
-		if (count == philo->param->max_eat)
-			set_one_ate_enought(philo);
-	}
-	return (NULL);
-}
-
-void	*pthread_term(void *argument)
-{
-	t_philo	*philo;
-
-	philo = (t_philo *)argument;
-	sem_wait(philo->param->sem_global_terminate);
-	sem_wait(&(philo->sem_terminate));
-	philo->terminate = TRUE;
-	sem_post(&(philo->sem_terminate));
-	return (NULL);
 }
 
 int	process_multi(t_philo *philo)
 {
 	pthread_t	actions;
 	pthread_t	term_monitor;
-	int			error;
 
 	if (pthread_create(&term_monitor, NULL, pthread_term, philo))
 		return (set_error(philo->param), 1);
 	if (pthread_create(&actions, NULL, pthread_actions, philo))
 		return (set_error(philo->param), 1);
-	// print some error
-	error = check_stop_conditions(philo);
+	// print some error and join term
+	check_stop_conditions(philo);
 	if (pthread_join(actions, NULL) || pthread_join(term_monitor, NULL))
 		return (set_error(philo->param), 1);
 	clean_exit_child(philo->param);
-	return (error);
+	return (0);
+}
+
+int	process_one(t_philo *philo)
+{
+	pthread_t	actions;
+	pthread_t	term_monitor;
+
+	if (pthread_create(&term_monitor, NULL, pthread_term, philo))
+		return (set_error(philo->param), 1);
+	if (pthread_create(&actions, NULL, pthread_actions_for_one,
+			philo))
+		return (set_error(philo->param), 1);
+	// print some error
+	check_stop_conditions(philo);
+	if (pthread_join(actions, NULL) || pthread_join(term_monitor, NULL))
+		return (set_error(philo->param), 1);
+	clean_exit_child(philo->param);
+	return (0);
 }

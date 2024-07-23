@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 17:30:32 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/18 18:20:27 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/19 11:17:29 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,6 +169,7 @@ t_bool	is_valid_parameters(int argc, char *argv[]);
 
 int		init_global_monitoring(t_philo_param *param);
 int		join_monitoring(t_philo_param *param);
+int		term_childs(t_philo_param *param);
 
 // PRINT
 
@@ -176,8 +177,26 @@ void	do_print(int message_id, t_philo *philo);
 
 // PROCESS
 
+int		process_one(t_philo *philo);
 int		process_multi(t_philo *philo);
 t_bool	do_terminate(t_philo *philo);
+void	set_one_ate_enought(t_philo *philo);
+
+// PTHREAD
+
+void	*pthread_dead(void *argument);
+void	*pthread_error(void *argument);
+void	*pthread_eat(void *argument);
+void	*pthread_term(void *argument);
+void	*pthread_actions(void *argument);
+void	*pthread_actions_for_one(void *argument);
+
+// SEM_UTILS
+
+int		unlink_sem(void);
+void	close_sem(t_philo_param *param);
+int		open_sem_others(t_philo_param *param);
+int		init_sem(t_philo_param *param);
 
 // TIME
 
