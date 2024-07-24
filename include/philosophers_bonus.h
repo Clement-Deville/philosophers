@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 17:30:32 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/19 11:17:29 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/24 16:30:17 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,6 +197,7 @@ int		unlink_sem(void);
 void	close_sem(t_philo_param *param);
 int		open_sem_others(t_philo_param *param);
 int		init_sem(t_philo_param *param);
+int		init_sem_child(t_philo_param *param);
 
 // TIME
 

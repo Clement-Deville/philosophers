@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 13:41:40 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/03 14:56:17 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/24 14:10:58 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,21 @@ int	set_one_ate_enought(t_philo *philo)
 	if (pthread_mutex_unlock(&(philo->mutex_ate_enought)))
 		return (set_error(philo->param), 1);
 	return (0);
+}
+
+void	odd_regulate(t_philo *philo)
+{
+	long	time;
+
+	if (philo->param->number_of_philosophers % 2 == 0)
+		return ;
+	pthread_mutex_lock(&(philo->mutex_last_eat));
+	time = time_passed(philo->param->clock) - philo->last_eat;
+	pthread_mutex_unlock(&(philo->mutex_last_eat));
+	if (time <= (1.1 * (philo->param->time_to_eat
+				+ philo->param->time_to_eat)))
+		usleep((philo->param->time_to_eat
+				+ philo->param->time_to_eat) * 500);
 }
 
 void	*pthread_fct(void *argument)
@@ -39,6 +54,7 @@ void	*pthread_fct(void *argument)
 		count++;
 		if (count == philo->param->max_eat)
 			set_one_ate_enought(philo);
+		odd_regulate(philo);
 	}
 	return (NULL);
 }

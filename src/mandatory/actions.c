@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/20 12:54:47 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/02 15:16:09 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/24 12:22:34 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,11 @@ int	do_eat(t_philo *philo)
 	if (do_continue(philo))
 		do_print(EAT, philo);
 	usleep(philo->param->time_to_eat * 1000);
-	if (pthread_mutex_lock(&(philo->mutex_last_eat)))
-		return (set_error(philo->param), 1);
-	philo->last_eat = time_passed(philo->param->clock);
-	if (pthread_mutex_unlock(&(philo->mutex_last_eat)))
-		return (set_error(philo->param), 1);
+	// if (pthread_mutex_lock(&(philo->mutex_last_eat)))
+	// 	return (set_error(philo->param), 1);
+	// philo->last_eat = time_passed(philo->param->clock);
+	// if (pthread_mutex_unlock(&(philo->mutex_last_eat)))
+	// 	return (set_error(philo->param), 1);
 	if (pthread_mutex_unlock(philo->l_fork)
 		|| pthread_mutex_unlock(philo->r_fork))
 		return (set_error(philo->param), 1);

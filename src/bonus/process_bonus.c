@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:44:10 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/23 16:45:05 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/24 17:21:39 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,9 @@ int	process_multi(t_philo *philo)
 	pthread_t	actions;
 	pthread_t	term_monitor;
 
+	// close_sem(philo->param);
+	// if (init_sem_child(philo->param))
+	// 	return (1);
 	if (pthread_create(&term_monitor, NULL, pthread_term, philo))
 		return (set_error(philo->param), 1);
 	if (pthread_create(&actions, NULL, pthread_actions, philo))
@@ -78,6 +81,9 @@ int	process_one(t_philo *philo)
 	pthread_t	actions;
 	pthread_t	term_monitor;
 
+	// close_sem(philo->param);
+	// if (init_sem_child(philo->param))
+	// 	return (1);
 	if (pthread_create(&term_monitor, NULL, pthread_term, philo))
 		return (set_error(philo->param), 1);
 	if (pthread_create(&actions, NULL, pthread_actions_for_one,
