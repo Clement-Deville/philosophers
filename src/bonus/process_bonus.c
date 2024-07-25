@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:44:10 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/24 17:21:39 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/25 17:59:44 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,21 +16,6 @@ void	set_one_ate_enought(t_philo *philo)
 {
 	if (do_continue(philo))
 		sem_post(philo->param->sem_everyone_ate);
-}
-
-t_bool	check_if_philo_died(t_philo *philo)
-{
-	long	timer;
-
-	sem_wait(&(philo->sem_last_eat));
-	timer = time_passed(philo->param->clock) - philo->last_eat;
-	sem_post(&(philo->sem_last_eat));
-	if (timer >= philo->param->time_to_die)
-	{
-		do_die(philo);
-		return (TRUE);
-	}
-	return (FALSE);
 }
 
 t_bool	do_terminate(t_philo *philo)
@@ -43,35 +28,19 @@ t_bool	do_terminate(t_philo *philo)
 	return (terminate);
 }
 
-int	check_stop_conditions(t_philo *philo)
-{
-	while (1)
-	{
-		if (check_if_philo_died(philo))
-			return (0);
-		if (do_terminate(philo))
-			return (0);
-		usleep(5000);
-		// old value == 50
-	}
-}
-
 int	process_multi(t_philo *philo)
 {
 	pthread_t	actions;
 	pthread_t	term_monitor;
 
-	// close_sem(philo->param);
-	// if (init_sem_child(philo->param))
-	// 	return (1);
 	if (pthread_create(&term_monitor, NULL, pthread_term, philo))
-		return (set_error(philo->param), 1);
+		return (perror("pthread_create"), set_error(philo->param), 1);
 	if (pthread_create(&actions, NULL, pthread_actions, philo))
-		return (set_error(philo->param), 1);
-	// print some error and join term
+		return (perror("pthread_create"), pthread_join(term_monitor, NULL),
+			set_error(philo->param), 1);
 	check_stop_conditions(philo);
 	if (pthread_join(actions, NULL) || pthread_join(term_monitor, NULL))
-		return (set_error(philo->param), 1);
+		return (perror("pthread_join"), set_error(philo->param), 1);
 	clean_exit_child(philo->param);
 	return (0);
 }
@@ -81,18 +50,17 @@ int	process_one(t_philo *philo)
 	pthread_t	actions;
 	pthread_t	term_monitor;
 
-	// close_sem(philo->param);
-	// if (init_sem_child(philo->param))
-	// 	return (1);
 	if (pthread_create(&term_monitor, NULL, pthread_term, philo))
-		return (set_error(philo->param), 1);
+		return (perror("pthread_create"), set_error(philo->param),
+			clean_exit_child(philo->param), 1);
 	if (pthread_create(&actions, NULL, pthread_actions_for_one,
 			philo))
-		return (set_error(philo->param), 1);
-	// print some error
+		return (perror("pthread_create"), set_error(philo->param),
+			pthread_join(term_monitor, NULL),
+			clean_exit_child(philo->param), 1);
 	check_stop_conditions(philo);
 	if (pthread_join(actions, NULL) || pthread_join(term_monitor, NULL))
-		return (set_error(philo->param), 1);
+		return (set_error(philo->param), clean_exit_child(philo->param), 1);
 	clean_exit_child(philo->param);
 	return (0);
 }

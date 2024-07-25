@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 10:29:03 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/03 16:40:53 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/25 17:05:35 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,12 +54,14 @@ typedef struct s_philo_param{
 	t_philo			*philo_tab;
 	t_bool			is_dead;
 	t_bool			everyone_ate;
+	t_bool			ready;
 	int				error;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	mutex_is_dead;
 	pthread_mutex_t	mutex_everyone_ate;
 	pthread_mutex_t	mutex_error;
 	pthread_mutex_t	print;
+	pthread_mutex_t	mutex_ready;
 }	t_philo_param;
 
 // ACTIONS
@@ -68,6 +70,7 @@ int		do_die(t_philo *philo);
 int		do_eat(t_philo *philo);
 int		do_sleep(t_philo *philo);
 int		do_think(t_philo *philo);
+void	odd_regulate(t_philo *philo);
 
 // CHECK
 

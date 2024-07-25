@@ -25,6 +25,7 @@ SRCS_FILES =	main	\
 
 SRCS_FILES_BONUS =	main_bonus	\
 					actions_bonus	\
+					check_bonus	\
 					clear_bonus	\
 					create_philo_bonus	\
 					do_continue_bonus	\
@@ -36,6 +37,7 @@ SRCS_FILES_BONUS =	main_bonus	\
 					print_bonus	\
 					process_bonus	\
 					pthreads_bonus	\
+					pthread_for_one_bonus	\
 					sem_utils	\
 					time_bonus	\
 					utils_bonus	\

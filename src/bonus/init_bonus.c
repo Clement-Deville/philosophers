@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 15:23:01 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/19 10:56:53 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/25 15:21:09 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,10 @@ int	init(t_philo_param *param, int argc, char *argv[])
 	if (allocate(param))
 		return (1);
 	param->stop = FALSE;
-	gettimeofday(&(param->clock), NULL);
 	if (create_philo(param))
 		return (1);
 	param->error = FALSE;
 	param->everyone_ate = FALSE;
+	gettimeofday(&(param->clock), NULL);
 	return (0);
 }

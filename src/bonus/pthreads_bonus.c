@@ -6,7 +6,7 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 10:51:05 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/24 16:33:08 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/25 16:02:05 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ void	*pthread_error(void *argument)
 	sem_wait((param->sem_error));
 	term_childs(param);
 	return (NULL);
-	// je dois faire exit  mon program avec la bonne valeur
 }
 
 void	*pthread_eat(void *argument)
@@ -57,21 +56,6 @@ void	*pthread_eat(void *argument)
 	return (NULL);
 }
 
-void	odd_regulate(t_philo *philo)
-{
-	long	time;
-
-	if (philo->param->number_of_philosophers % 2 == 0)
-		return ;
-	sem_wait(&(philo->sem_last_eat));
-	time = time_passed(philo->param->clock) - philo->last_eat;
-	sem_post(&(philo->sem_last_eat));
-	if (time <= (1.1 * (philo->param->time_to_eat
-				+ philo->param->time_to_eat)))
-		usleep((philo->param->time_to_eat
-				+ philo->param->time_to_eat) * 500);
-}
-
 void	*pthread_actions(void *argument)
 {
 	int		count;
@@ -93,27 +77,11 @@ void	*pthread_actions(void *argument)
 	return (NULL);
 }
 
-void	*pthread_actions_for_one(void *argument)
-{
-	int		count;
-	t_philo	*philo;
-
-	philo = (t_philo *)argument;
-	count = 0;
-	do_print(FORK, philo);
-	while (do_continue(philo) == TRUE)
-	{
-		usleep(500);
-	}
-	return (NULL);
-}
-
 void	*pthread_term(void *argument)
 {
 	t_philo	*philo;
 
 	philo = (t_philo *)argument;
-
 	sem_wait(philo->param->sem_global_terminate);
 	sem_wait(&(philo->sem_terminate));
 	philo->terminate = TRUE;

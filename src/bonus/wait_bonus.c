@@ -6,26 +6,26 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:47:39 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/23 14:58:16 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/25 15:59:09 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <philosophers_bonus.h>
 
-int	kill_all_childs(t_philo_param *param)
-{
-	int	i;
+// int	kill_all_childs(t_philo_param *param)
+// {
+// 	int	i;
 
-	i = 0;
-	sem_wait(param->sem_pid_tab);
-	while (i < param->number_of_philosophers)
-	{
-		kill(param->pid_tab[i], SIGTERM);
-		i++;
-	}
-	sem_post(param->sem_pid_tab);
-	return (0);
-}
+// 	i = 0;
+// 	sem_wait(param->sem_pid_tab);
+// 	while (i < param->number_of_philosophers)
+// 	{
+// 		kill(param->pid_tab[i], SIGTERM);
+// 		i++;
+// 	}
+// 	sem_post(param->sem_pid_tab);
+// 	return (0);
+// }
 
 int	check_status(int status)
 {
@@ -41,7 +41,7 @@ void	print_error(int status)
 	if (status < 0)
 	{
 		printf("CRITICAL ERROR: a child has been stopped cause of signal %s\n",
-		strsignal(WIFSIGNALED(status)));
+			strsignal(WIFSIGNALED(status)));
 		return ;
 	}
 	else
