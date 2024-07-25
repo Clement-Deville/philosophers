@@ -6,11 +6,11 @@
 /*   By: cdeville <cdeville@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 16:08:52 by cdeville          #+#    #+#             */
-/*   Updated: 2024/07/03 12:46:18 by cdeville         ###   ########.fr       */
+/*   Updated: 2024/07/25 18:15:45 by cdeville         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <philosophers.h>
+#include <philosophers_bonus.h>
 
 static int	ft_isspace(int c)
 {
